@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-5.1.dtd">
+<!-- eric project file for project ArtNet_DMX_Controller -->
+<!-- Saved: 2016-03-28, 22:45:09 -->
+<!-- Copyright (C) 2016 Beranrd REMOND, nbremond@laposte.net -->
+<Project version="5.1">
+  <Language>en_US</Language>
+  <Hash>5a9f9f7a44fa41080e6c7c78079d650db3d69a82</Hash>
+  <ProgLanguage mixed="0">Python3</ProgLanguage>
+  <ProjectType>Console</ProjectType>
+  <Description></Description>
+  <Version>0.1</Version>
+  <Author>Beranrd REMOND</Author>
+  <Email>nbremond@laposte.net</Email>
+  <Eol index="-1"/>
+  <Sources>
+    <Source>Artnet_light_control.py</Source>
+    <Source>__init__.py</Source>
+    <Source>config.py</Source>
+  </Sources>
+  <Forms/>
+  <Translations/>
+  <Resources>
+    <Resource>README.md</Resource>
+    <Resource>static/About-48.png</Resource>
+    <Resource>static/About.png</Resource>
+    <Resource>static/Help.png</Resource>
+    <Resource>static/about-96-32.png</Resource>
+    <Resource>static/about.jpg</Resource>
+    <Resource>static/about2.ico</Resource>
+    <Resource>static/about2_small.jpg</Resource>
+    <Resource>static/about2_small.png</Resource>
+    <Resource>static/arrow1.png</Resource>
+    <Resource>static/arrow1_SmallL.png</Resource>
+    <Resource>static/arrow1_SmallR.png</Resource>
+    <Resource>static/douche1.jpg</Resource>
+    <Resource>static/douche10.jpg</Resource>
+    <Resource>static/douche2.jpg</Resource>
+    <Resource>static/douche3.jpg</Resource>
+    <Resource>static/douche4.jpg</Resource>
+    <Resource>static/douche6.jpg</Resource>
+    <Resource>static/fleche_bleue.jpg</Resource>
+    <Resource>static/fleche_bleue_smallL.jpg</Resource>
+    <Resource>static/fleche_bleue_smallL.png</Resource>
+    <Resource>static/fleche_bleue_smallR.jpg</Resource>
+    <Resource>static/fleche_bleue_smallR.png</Resource>
+    <Resource>static/setup.png</Resource>
+    <Resource>static/style.css</Resource>
+    <Resource>static/wp_setup.jpg</Resource>
+    <Resource>templates/layout_1.html</Resource>
+  </Resources>
+  <Interfaces/>
+  <Others>
+    <Other>.gitignore</Other>
+  </Others>
+  <MainScript>Artnet_light_control.py</MainScript>
+  <Vcs>
+    <VcsType>Git</VcsType>
+    <VcsOptions>
+      <dict>
+        <key>
+          <string>add</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>checkout</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>commit</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>diff</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>export</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>global</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>history</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>log</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>remove</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>status</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>tag</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>update</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+      </dict>
+    </VcsOptions>
+    <VcsOtherData>
+      <dict/>
+    </VcsOtherData>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.css" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.gif" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.html" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.ico" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>
+    <FiletypeAssociation pattern="*.jpg" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.md" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.png" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.py" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.py2" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw2" type="SOURCES"/>
+  </FiletypeAssociations>
+</Project>
