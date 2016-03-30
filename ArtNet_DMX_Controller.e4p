@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project ArtNet_DMX_Controller -->
-<!-- Saved: 2016-03-28, 22:45:09 -->
+<!-- Saved: 2016-03-30, 22:46:31 -->
 <!-- Copyright (C) 2016 Beranrd REMOND, nbremond@laposte.net -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -17,6 +17,8 @@
     <Source>Artnet_light_control.py</Source>
     <Source>__init__.py</Source>
     <Source>config.py</Source>
+    <Source>dmx_NBRLib.py</Source>
+    <Source>test_DMX.py</Source>
   </Sources>
   <Forms/>
   <Translations/>

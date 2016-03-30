@@ -37,7 +37,7 @@ class DMXelement():
 
     def setBaseDMXaddress(self, baseDMXaddress):
         if baseDMXaddress > 0:
-            self.baseDMXaddress = baseDMXaddress - 1
+            self.baseDMXaddress = baseDMXaddress
         else:
             self.baseDMXaddress = 0
 
@@ -162,7 +162,7 @@ class DMXfixture():
         #   fixtureDMXelements = ["R", "G", "B", "Mode"]
         #   fixtureDMXnbOfBytes = [1, 1, 1, 1]
         #   softTransition = [True, True, True, False]          // True for analog values, False for mode and discrete values
-        #   disreteValues = [{}, {}, {}, {'RGB'=1, 'Color'=10, 'Auto'=20, 'Music'=30}}
+        #   disreteValues = [{}, {}, {}, {'RGB':1, 'Color':10, 'Auto':20, 'Music':30}] // List of possible values for discrete parameters
 
         self.name = fixtureName
         self.baseDMXaddress = baseDMXaddress
@@ -170,9 +170,10 @@ class DMXfixture():
         self.fixtureDMXnbOfBytes = fixtureDMXnbOfBytes
         self.softTransition = softTransition
         self.disreteValues = disreteValues
-        self.elementList = {}
+        self.elementList = []
         offset = 0
 
+        # Create the required DMXelement
         for i, elt in enumerate(self.fixtureDMXelements):
             theDMXelement = DMXelement(elt, baseDMXaddress + offset, fixtureDMXnbOfBytes[i], softTransition[i],  disreteValues[i] )
             theDMXelement.setBaseDMXaddress(baseDMXaddress + offset)
@@ -221,23 +222,32 @@ class DMXfixture():
 
 
 class stageSetup():
-    def __init__(self, setupName,  fixtureList = []):
+    def __init__(self, setupName,  fixtureList = [],  groupList = []):
         # Parameters
         #   setupName = "Théatre du rond point - Scene 1"
         #   fixtureList  = [fixture1, fixture2, fixture3, fixture4]
+        #   groupList = ["group1", "group2", "group3"}
         self.name = setupName
         self.fixtureList = fixtureList
+        self.groupList = groupList
+
     
     def addFixture(self,  fixture):
         self.fixtureList.append(fixture)
+        
+    def addFixtureToGroupList(self, groupName,  fixture):
+        self.groupList[groupName].append(fixture)
+        
+    def getFixtureList(self):
+        return self.fixtureList
 
-    def getFixtureAddressList(self,  myFixtureList):
-        fixtureAddressList = {}
-        for fixtureName in myFixtureList:
-            for elt in self.fixtureList:
-                if elt.GetFixture(fixtureName) != None:
-                    fixtureAddressList.append(elt)
-        return fixtureAddressList
+#    def getFixtureAddressList(self,  myFixtureList):
+#        fixtureAddressList = {}
+#        for fixture in myFixtureList:
+#            for elt in self.fixtureList:
+#                if elt.GetFixture(fixtureName) != None:
+#                    fixtureAddressList.append(elt)
+#        return fixtureAddressList
 
     def getAllFixtureAddressList(self):
         return self.fixtureList
@@ -245,27 +255,33 @@ class stageSetup():
 
 
 class scene():
-    def __init__(self, stageSetup,  sceneName,  fixtureList,  valueList, transitionDuration = 0):
+    def __init__(self, stageSetup,  sceneName,  fixtureList,  valueList, groupList,  groupValueList,  transitionDuration = 0):
         # Parameters
         #   stageSetup = MyStageSetup
         #   sceneName = "Scene intime"
         #   fixtureList  = ["Chauvet_RGB56#1", "Chauvet_RGB56#2", "Chauvet_RGB56#3", "Chauvet_RGB56#4"]
-        #   valueList = [{10, 120, 30, "RGB"}, {10, 120, 30, "RGB"}, {10, 120, 30, "RGB"}, {10, 120, 30, "RGB"}]
+        #   valueList =  [[10, 120, 30, "RGB"], [10, 120, 30, "Color"], [10, 120, 30, "Auto"], [10, 120, 30, "Music"]]
+        #   groupList = ["group1", "group2"]
+        #   groupValueList = [[10, 120, 30, "RGB"], [10, 120, 30, "RGB"]]
         #   transitionDuration = 3
 
         self.stageSetup = stageSetup
         self.name = sceneName
         self.fixtureList = fixtureList
         self.valueList = valueList
+        self.groupList = groupList
+        self.groupValueList = groupValueList
         self.transitionDuration = transitionDuration
-        self.fixtureAddressList = stageSetup.getFixtureAddressList(fixtureList)
+#        self.fixtureAddressList = stageSetup.getFixtureAddressList(fixtureList)
+#        self.fixtureAddressList = fixtureList
 
 
     def updateFixtureValues(self,  fixtureList,  valueList,  transitionDuration):
         self.fixtureList = fixtureList
         self.valueList = valueList
         self.transitionDuration = transitionDuration
-        self.fixtureAddressList = self.stageSetup.getFixtureAddressList(self.fixtureList)
+#        self.fixtureAddressList = self.stageSetup.getFixtureAddressList(self.fixtureList)
+#        self.fixtureAddressList = self.stageSetup.getFixtureAddressList(self.fixtureList)
 
     def updateValues(self,  valueList,  transitionDuration):
         self.valueList = valueList
@@ -274,8 +290,8 @@ class scene():
     def getFixtureList(self):
         return self.fixtureList
     
-    def getFixtureAddressList(self):
-        return self.fixtureAddressList
+#    def getFixtureAddressList(self):
+#        return self.fixtureAddressList
     
     def getValueList(self):
         return self.valueList
@@ -284,9 +300,21 @@ class scene():
         return self.transitionDuration
     
     def activate(self,  currentTime=0.0, sampleTime=1.0):
-        for i, elt in enumerate(self.fixtureAddressList):
+        # Set the value of the fixture
+#        for i, elt in enumerate(self.fixtureAddressList):
+        for i, elt in enumerate(self.fixtureList):
             elt.setValue( self.valueList[i],  self.transitionDuration,  currentTime,  sampleTime)
 
+        # Set the values of the fixture of the group
+        for i, group in enumerate(self.groupList):
+            for j, listOfFixture in enumerate(self.stageSetup.groupList[group]):
+                for k, fixture in enumerate(listOfFixture):
+                    fixture.setValue( self.groupValueList[i],  self.transitionDuration,  currentTime,  sampleTime)
 
 
-
+class chase():
+    def __init__(self, stageSetup,  chaseName,  sceneList,  sceneTiming):
+        self.stageSetup = stageSetup
+        self.chaseName = chaseName
+        self.scenelist = sceneList
+        self.sceneTiming = sceneTiming

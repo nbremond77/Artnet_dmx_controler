@@ -1,4 +1,5 @@
-## @package pyexample
+#!/usr/bin/env python
+## @package artnet_light_control
 #  Documentation for this module.
 #
 #  More details.
