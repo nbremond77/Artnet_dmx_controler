@@ -8,6 +8,85 @@ import sip
 sip.setapi('QString', 2)
 
 import logging
+from threading import Thread
+import time
+
+import sys, socket, math, time,  logging
+from ctypes import *
+
+log = logging.getLogger(__name__)
+
+
+class ArtNetDMXOut(LittleEndianStructure):
+    PORT = 0x1936
+    _fields_ = [("id", c_char * 8),
+                ("opcode", c_ushort),
+                ("protverh", c_ubyte),
+                ("protver", c_ubyte),
+                ("sequence", c_ubyte),
+                ("physical", c_ubyte),         
+                ("universe", c_ushort),
+                ("lengthhi", c_ubyte),
+                ("length", c_ubyte),
+                ("payload", c_ubyte * 512)]
+    def __init__(self):
+        self.id = b"Art-Net"
+        self.opcode = 0x5000
+        self.protver = 14
+        self.universe = 1
+        self.lengthhi = 2
+
+    
+    
+    
+    
+    
+
+class Run_DMX_Thread(Thread):
+    """Thread to update the DMX data and send the DMX Artnet data."""
+    def __init__(self, theStage, Tsample,  hostIP):
+        Thread.__init__(self)
+        self.stage = theStage
+        self.Tsample = Tsample
+        self.signal = True
+        self.counter = 0
+
+        self.hostIP = hostIP
+        self.S = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        self.packet = ArtNetDMXOut()
+
+
+
+
+
+    def run(self):
+        """Code à exécuter pendant l'exécution du thread."""
+        while self.signal:
+    
+            print ("Run DMX %s...\n" % self.counter)
+            self.counter += 1
+            
+            self.packet.payload[1] = 255
+            self.packet.payload[2] = self.counter
+            self.S.sendto(self.packet, (self.hostIP, ArtNetDMXOut.PORT))
+    
+            time.sleep(self.Tsample)
+
+
+class DMX_Thread():
+    """Thread to update the DMX data and send the DMX Artnet data."""
+    # Create the thread
+    def __init__(self, theStage, Tsample,  hostIP):
+        self.thread = Run_DMX_Thread(theStage, Tsample,  hostIP)
+
+    # Start the thread
+    def start(self):
+        self.thread.start()
+
+    # Stop the thread and wait for termination
+    def stop(self):
+        self.thread.signal = False
+        self.thread.join()    
 
 
 class DMXelement():
@@ -41,7 +120,7 @@ class DMXelement():
         else:
             self.baseDMXaddress = 0
 
-        logging.debug("setBaseDMXaddress: DMX Element %s : set baseDMXaddress: %s, offset: %s --> %s -- %s", self.name, self.baseDMXaddress, self.offsetDMXaddress, self.baseDMXaddress + self.offsetDMXaddress, self)
+        log.debug("setBaseDMXaddress: DMX Element %s : set baseDMXaddress: %s, offset: %s --> %s -- %s", self.name, self.baseDMXaddress, self.offsetDMXaddress, self.baseDMXaddress + self.offsetDMXaddress, self)
 
 
     def setGainAndOffset(self, gain, offset, minValue, maxValue):
@@ -122,7 +201,8 @@ class DMXelement():
 
 
     def setValue(self, value,  transitionDuration = 0.0,  currentTime = 0.0,  sampleTime = 1.0):
-        if self.addressNbOfByte > 0:
+        
+        if self.addressNbOfByte > 0 and isinstance(value, (int,float)):
             self.DMXtargetValue = int(value*self.gain + self.offset)
         else:
             self.DMXtargetValue = 0
@@ -224,7 +304,7 @@ class DMXfixture():
 class stageSetup():
     def __init__(self, setupName,  fixtureList = [],  groupList = []):
         # Parameters
-        #   setupName = "Théatre du rond point - Scene 1"
+        #   setupName = "Théatre du rond point - Frame 1"
         #   fixtureList  = [fixture1, fixture2, fixture3, fixture4]
         #   groupList = ["group1", "group2", "group3"}
         self.name = setupName
@@ -254,11 +334,11 @@ class stageSetup():
 
 
 
-class scene():
-    def __init__(self, stageSetup,  sceneName,  fixtureList,  valueList, groupList,  groupValueList,  transitionDuration = 0):
+class frame():
+    def __init__(self, stageSetup,  frameName,  fixtureList,  valueList, groupList,  groupValueList,  transitionDuration = 0):
         # Parameters
         #   stageSetup = MyStageSetup
-        #   sceneName = "Scene intime"
+        #   frameName = "Frame intime"
         #   fixtureList  = ["Chauvet_RGB56#1", "Chauvet_RGB56#2", "Chauvet_RGB56#3", "Chauvet_RGB56#4"]
         #   valueList =  [[10, 120, 30, "RGB"], [10, 120, 30, "Color"], [10, 120, 30, "Auto"], [10, 120, 30, "Music"]]
         #   groupList = ["group1", "group2"]
@@ -266,7 +346,7 @@ class scene():
         #   transitionDuration = 3
 
         self.stageSetup = stageSetup
-        self.name = sceneName
+        self.name = frameName
         self.fixtureList = fixtureList
         self.valueList = valueList
         self.groupList = groupList
@@ -313,8 +393,8 @@ class scene():
 
 
 class chase():
-    def __init__(self, stageSetup,  chaseName,  sceneList,  sceneTiming):
+    def __init__(self, stageSetup,  chaseName,  frameList,  frameTiming):
         self.stageSetup = stageSetup
         self.chaseName = chaseName
-        self.scenelist = sceneList
-        self.sceneTiming = sceneTiming
+        self.framelist = frameList
+        self.frameTiming = frameTiming

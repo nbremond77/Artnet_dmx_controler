@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project ArtNet_DMX_Controller -->
-<!-- Saved: 2016-03-30, 22:46:31 -->
+<!-- Saved: 2016-04-03, 22:39:24 -->
 <!-- Copyright (C) 2016 Beranrd REMOND, nbremond@laposte.net -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -17,7 +17,34 @@
     <Source>Artnet_light_control.py</Source>
     <Source>__init__.py</Source>
     <Source>config.py</Source>
+    <Source>dmx/__init__.py</Source>
+    <Source>dmx/fades.py</Source>
+    <Source>dmx/patterns.py</Source>
     <Source>dmx_NBRLib.py</Source>
+    <Source>dmx_chase.py</Source>
+    <Source>dmx_controller.py</Source>
+    <Source>dmx_deamon.py</Source>
+    <Source>dmx_definitions.py</Source>
+    <Source>dmx_effects.py</Source>
+    <Source>dmx_fixture.py</Source>
+    <Source>dmx_frame.py</Source>
+    <Source>dmx_packet.py</Source>
+    <Source>dmx_rig.py</Source>
+    <Source>dmx_show.py</Source>
+    <Source>fixtures/__init__.py</Source>
+    <Source>fixtures/american-dj/megabar-rgb-50.py</Source>
+    <Source>fixtures/chauvet/slimpar-64.yaml</Source>
+    <Source>rigs/my-rig.yaml</Source>
+    <Source>scripts/__init__.py</Source>
+    <Source>scripts/all_channels_blackout.py</Source>
+    <Source>scripts/all_channels_full.py</Source>
+    <Source>scripts/alternating_color_fades.py</Source>
+    <Source>scripts/export_packet.py</Source>
+    <Source>scripts/layered_chase.py</Source>
+    <Source>scripts/listener.py</Source>
+    <Source>scripts/pulse_beat.py</Source>
+    <Source>scripts/rotator.py</Source>
+    <Source>scripts/shell.py</Source>
     <Source>test_DMX.py</Source>
   </Sources>
   <Forms/>
