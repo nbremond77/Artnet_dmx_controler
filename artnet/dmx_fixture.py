@@ -5,7 +5,7 @@ import logging
 import pkg_resources as pkg
 
 #from artnet import dmx
-import dmx_frame
+from artnet import dmx_frame
 
 log = logging.getLogger(__name__)
 
@@ -29,6 +29,11 @@ def hex_to_rgb(value):
 def rgb_to_hex(rgb):
     return '#%02x%02x%02x' % rgb
 
+
+def hex_to_rgbw(value):
+    value = value.lstrip('#')
+    lv = len(value)
+    return tuple(int(value[i:i+lv//4], 16) for i in range(0, lv, lv//4))
 
 def rgbw_to_hex(rgbw):
     return '#%02x%02x%02x%02x' % rgbw
@@ -115,12 +120,12 @@ class Fixture(object):
     def getState(self):
         #do program channels last, since we might be using strobe for speed
         prg_cmp = lambda a,b: [-1,1][a[0] == 'program']
-        titi = self.controls.items()
-#        toto = sorted(titi, prg_cmp)
-        for clist in titi:
-            for c in clist[1]:
-                for x in c.getState():
-                    print(x)
+#        titi = self.controls.items()
+#        toto = sorted(titi, prg_cmp) ## Sorting is not working in python 3... removed...
+#        for clist in titi:
+#            for c in clist[1]:
+#                for x in c.getState():
+#                    print(x)
 #        return [x for clist in sorted(self.controls.items(), prg_cmp) for c in clist[1] for x in c.getState()]
         return [x for clist in (self.controls.items()) for c in clist[1] for x in c.getState()]
     
@@ -196,20 +201,21 @@ class RGBWControl(object):
         self.white_offset = fixturedef['rgbw_offsets']['white']
         return 'rgbw'
     
-    def setColor(self, hexcode,  white=0):
+    def setColor(self, hexcode):
         # for some reason this is out of order
-        r, b, g = hex_to_rgb(str(hexcode))
+        r, b, g w = hex_to_rgbw(str(hexcode))
         self.red_level = r
         self.green_level = g
         self.blue_level = b
-        self.white_level = white
+        self.white_level = w
     
     def getColor(self):
         # for some reason this is out of order
-        return rgb_to_hex((
+        return rgbw_to_hex((
             self.red_level, 
             self.blue_level,
             self.green_level,
+            self.white_level,
         ))
     
     def getColorRGBW(self):
@@ -245,12 +251,12 @@ class XYControl(object):
         pass
     
     def configure(self, fixturedef):
-        # self.has_fine_control = (xfine is None and yfine is None)
-        # self.x_offset = x
-        # self.y_offset = y
-        # if(self.has_fine_control):
-        #     self.xfine_offset = xfine
-        #     self.yfine_offset = yfine
+        self.has_fine_control = (xfine is None and yfine is None)
+        self.x_offset = x
+        self.y_offset = y
+        if(self.has_fine_control):
+            self.xfine_offset = xfine
+            self.yfine_offset = yfine
         return 'xy'
     
     def getState(self):
@@ -351,11 +357,11 @@ class IntensityControl(object):
             (self.intensity_offset, self.intensity_value)
         ]
 
-available_controls = [
-    RGBControl,
+#available_controls = [
+#    RGBControl,
 #    RGBWControl,
-    XYControl,
-    StrobeControl,
-    ProgramControl,
-    IntensityControl
-]
+#    XYControl,
+#    StrobeControl,
+#    ProgramControl,
+#    IntensityControl
+#]

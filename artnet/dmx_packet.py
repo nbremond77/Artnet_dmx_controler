@@ -11,7 +11,7 @@ import uuid
 
 import bitstring
 
-import dmx_definitions
+from artnet import dmx_definitions
 
 log = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class ArtNetPacket(object):
 		
 		return p
 
-	def __init__(self, address=None, sequence=0, physical=0, universe=0):
+	def __init__(self, address=None, sequence=0, physical=0, universe=1):
 		self.address = address
 		self.sequence = sequence
 		self.physical = physical
@@ -146,12 +146,12 @@ class PollReplyPacket(ArtNetPacket):
 	
 	port = dmx_definitions.STANDARD_PORT
 	
-	short_name = 'python-artnet'
-	long_name = 'https://github.com/philchristensen/python-artnet.git'
+	short_name = 'ArtNet Lighting Controller'
+	long_name = 'https://github.com/nbremond77/Artnet_dmx_controler'
 	style = dmx_definitions.STYLE_CODES['StController']
 	esta_manufacturer = 'PA'
 	version = 1
-	universe = 0
+	universe = 1
 	status1 = 2
 	status2 = bitstring.Bits('0b0111').int
 	

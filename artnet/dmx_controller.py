@@ -1,8 +1,9 @@
 # From gitHub : philchristensen/python-artnet
 # https://github.com/philchristensen/python-artnet
 import time, sys, socket, logging, threading, itertools
-import dmx_frame
-import dmx_deamon
+
+from artnet import dmx_frame
+from artnet import dmx_deamon
 
 log = logging.getLogger(__name__)
 

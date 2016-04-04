@@ -12,10 +12,10 @@ import pkg_resources as pkg
 #from artnet import dmx
 #import dmx_NBRLib
 
-import dmx_fixture
-import dmx_frame
-import dmx_chase
-import dmx_show
+from artnet import dmx_fixture
+from artnet import dmx_cue
+from artnet import dmx_chase
+from artnet import dmx_show
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class Rig():
         self.name = name
         self.groups = {}
         self.fixtures = {}
-        self.frames = {}
+        self.cue = {}
         self.chases = {}
         self.shows = {}
         self.rig_data = {}
@@ -54,9 +54,9 @@ class Rig():
                 self.fixtures[g] for g in group
             ])
     
-        # decode Frames
-        for name, frame in self.rig_data['frames'].items():
-            print("Frame: %s" % name)
+        # decode Cues
+        for name, cue in self.rig_data['cue'].items():
+            print("Cue: %s" % name)
         
         # decode Chases
         for name, chase in self.rig_data['chases'].items():
@@ -77,9 +77,9 @@ class Rig():
         for group in self.groups:
             print("  - %s" % group)
 
-        print("Frames:")
-        for frame in self.frames:
-            print("  %s" % frame)
+        print("Cues:")
+        for cue in self.cue:
+            print("  %s" % cue)
 
         print("Chases:")
         for chase in self.chases:

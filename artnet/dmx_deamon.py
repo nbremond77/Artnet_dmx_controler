@@ -11,8 +11,8 @@ import json
 #import artnet
 #from artnet import packet, STANDARD_PORT, OPCODES, STYLE_CODES
 
-import dmx_packet
-import dmx_definitions
+from artnet import dmx_packet
+from artnet import dmx_definitions
 
 log = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ class Poller(threading.Thread):
         if(p.opcode == dmx_definitions.OPCODES['OpPoll']):
             self.send_poll_reply(p)
     
-    def send_dmx(self, frame, universe=0):
+    def send_dmx(self, frame, universe=1):
         p = packet.DmxPacket(frame, universe=universe)
         self.sock.sendto(p.encode(), (self.address, dmx_definitions.STANDARD_PORT))
     

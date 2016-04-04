@@ -3,7 +3,7 @@
 import time, logging
 
 #from artnet import dmx
-import dmx_frame
+from artnet import dmx_frame
 
 log = logging.getLogger(__name__)
 
@@ -36,9 +36,6 @@ def pulse_beat(clock, start, end, secs=5.0):
 		if(time.time() - t >= secs):
 			return
 		c = clock()
-
-
-
 
 def rotate(clock, group):
 	t = time.time()
