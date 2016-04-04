@@ -55,7 +55,7 @@ class Rig():
             ])
     
         # decode Cues
-        for name, cue in self.rig_data['cue'].items():
+        for name, cue in self.rig_data['cues'].items():
             print("Cue: %s" % name)
         
         # decode Chases

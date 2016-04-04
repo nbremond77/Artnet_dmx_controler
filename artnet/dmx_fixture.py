@@ -203,7 +203,7 @@ class RGBWControl(object):
     
     def setColor(self, hexcode):
         # for some reason this is out of order
-        r, b, g w = hex_to_rgbw(str(hexcode))
+        r, b, g,  w = hex_to_rgbw(str(hexcode))
         self.red_level = r
         self.green_level = g
         self.blue_level = b

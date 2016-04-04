@@ -16,14 +16,15 @@ from artnet import dmx_definitions
 
 log = logging.getLogger(__name__)
 
-def main(config):
-    log.info("Running script %s" % __name__)
-    d = Poller(config.get('base', 'address'))
-    d.run()
+#def main(config):
+#    log.info("Running script %s" % __name__)
+#    d = Poller(config.get('base', 'address'))
+#    d.run()
 
 class Poller(threading.Thread):
     def __init__(self, address, nodaemon=False, runout=False):
         super(Poller, self).__init__()
+        
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         
@@ -50,7 +51,7 @@ class Poller(threading.Thread):
             time.sleep(0.1)
             return None
         
-        return packet.ArtNetPacket.decode(addr, data)
+        return dmx_packet.ArtNetPacket.decode(addr, data)
     
     def handle_artnet(self):
         if(time.time() - self.last_poll >= 4):
@@ -66,18 +67,18 @@ class Poller(threading.Thread):
             self.send_poll_reply(p)
     
     def send_dmx(self, frame, universe=1):
-        p = packet.DmxPacket(frame, universe=universe)
+        p = dmx_packet.DmxPacket(frame, universe=universe)
         self.sock.sendto(p.encode(), (self.address, dmx_definitions.STANDARD_PORT))
     
     def send_poll(self):
-        p = packet.PollPacket(address=self.broadcast_address)
+        p = dmx_packet.PollPacket(address=self.broadcast_address)
         self.sock.sendto(p.encode(), (p.address, dmx_definitions.STANDARD_PORT))
     
     def send_poll_reply(self, poll):
         ip_address = socket.gethostbyname(socket.gethostname())
         style = dmx_definitions.STYLE_CODES['StNode'] if isinstance(self, Poller) else dmx_definitions.STYLE_CODES['StController']
         
-        r = packet.PollReplyPacket(address=self.broadcast_address)
+        r = dmx_packet.PollReplyPacket(address=self.broadcast_address)
         r.style = style
         
         log.debug("send: %s" % r)
