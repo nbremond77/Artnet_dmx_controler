@@ -19,13 +19,13 @@ import os
 import time
 import logging
 
-import dmx_rig
-import dmx_fixture
-import dmx_frame
-import dmx_chase
-import dmx_show
-import dmx_controller
-import dmx_effects
+from artnet import dmx_rig
+from artnet import dmx_fixture
+from artnet import dmx_frame
+from artnet import dmx_chase
+from artnet import dmx_show
+from artnet import dmx_controller
+from artnet import dmx_effects
 
 #import dmx_NBRLib
 
@@ -63,7 +63,8 @@ import config
 
 # Load app configuration
 #app.config.from_object(os.environ['APP_SETTINGS'])
-app.config.from_object(config.DevelopmentConfig)
+#app.config.from_object(config.DevelopmentConfig)
+app.config.from_object(config.ProductionConfig)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -153,53 +154,6 @@ if __name__ == '__main__':
     g = myRig.groups['all']
     
 
-    """
-    # Create fixtures
-    RGB1 = dmx_NBRLib.DMXfixture("RGB#1", 0x10, ["R", "G", "B", "Mode"],  [1, 1, 1, 1],  [True, True, True, False] ,  [{}, {}, {}, {'RGB':1, 'Color':10, 'Auto':20, 'Music':30}])
-    fixtureList.append(RGB1)
-
-    RGB2 = dmx_NBRLib.DMXfixture("RGB#2", 0x14, ["R", "G", "B", "Mode"],  [1, 1, 1, 1],  [True, True, True, False] ,  [{}, {}, {}, {'RGB':1, 'Color':10, 'Auto':20, 'Music':30}])
-    fixtureList.append(RGB2)
-
-    RGB3 = dmx_NBRLib.DMXfixture("RGB#3", 0x18, ["R", "G", "B", "Mode"],  [1, 1, 1, 1],  [True, True, True, False] ,  [{}, {}, {}, {'RGB':1, 'Color':10, 'Auto':20, 'Music':30}])
-    fixtureList.append(RGB3)
-
-    # Create the stage
-    theStage = dmx_NBRLib.stageSetup("My stage",  fixtureList,  groupList)
-
-
-    # Add fixture to stage
-    RGB4 = dmx_NBRLib.DMXfixture("RGB#4", 0x18, ["R", "G", "B", "Mode"],  [1, 1, 1, 1],  [True, True, True, False] ,  [{}, {}, {}, {'RGB':1, 'Color':10, 'Auto':20, 'Music':30}])
-    #fixtureList.append(RGB4)
-
-    theStage.addFixture(RGB4)
-
-
-    # Create new frames
-    myFrame1 = dmx_NBRLib.frame(theStage,  "Frame1",  theStage.getFixtureList(),  [[10, 120, 30, "RGB"], [10, 120, 30, "Color"], [10, 120, 30, "Auto"], [10, 120, 30, "Music"]], [],  [], 5)
-    frameList.append(myFrame1)
-
-    myFrame2 = dmx_NBRLib.frame(theStage,  "Frame2",  theStage.getFixtureList(),  [[10, 120, 30, "RGB"], [10, 120, 30, "Color"], [10, 120, 30, "Auto"], [10, 120, 30, "Music"]], [],  [], 5)
-    frameList.append(myFrame2)
-
-    myFrame3 = dmx_NBRLib.frame(theStage,  "Frame3",  theStage.getFixtureList(),  [[10, 120, 30, "RGB"], [10, 120, 30, "Color"], [10, 120, 30, "Auto"], [10, 120, 30, "Music"]], [],  [], 5)
-    frameList.append(myFrame3)
-
-    myFrame4 = dmx_NBRLib.frame(theStage,  "Frame4",  theStage.getFixtureList(),  [[10, 120, 30, "RGB"], [10, 120, 30, "Color"], [10, 120, 30, "Auto"], [10, 120, 30, "Music"]], [],  [], 5)
-    frameList.append(myFrame4)
-
-    # Create a chase
-    myChase1 = dmx_NBRLib.chase(theStage,  "Chase1",  frameList,  [10,  5,  12,  11])
-    chaseList.append(myChase1)
-
-    # Activate a frame
-    myFrame3.activate(time.time(), Tsample)
-
-    # Activate a chase
-
-    """
-    ################################################################
-
     log.info("Running script %s" % __name__)
     # global g
     # g = get_default_fixture_group(config)
@@ -208,18 +162,20 @@ if __name__ == '__main__':
 
     print("Configure DMX controller")
 
-    q = dmx_controller.Controller(address, bpm=60, nodaemon=True, runout=True)
+    q = dmx_controller.Controller(address, bpm=30, fps=40,  nodaemon=True, runout=False)
+
+    print("add multifade effect")
 
     q.add(dmx_effects.create_multifade([
         all_red(g),
         all_blue(g),
-    ] * 3, secs=5.0))
+    ] * 30, secs=65.0))
     
     print("Start DMX controller")
     q.start()
 
 
-
+#    time.sleep(5)
 
     # Start DMX thread
 #    myDMXthread = dmx_NBRLib.DMX_Thread(theStage,  Tsample,  hostIP)
@@ -227,7 +183,7 @@ if __name__ == '__main__':
     
     # Run the web server on port 5000
     print("Run the web server on port 5000")
-#    app.run('0.0.0.0')
+    app.run('0.0.0.0')
     
     # stop the DMX thread
 #    myDMXthread.stop()

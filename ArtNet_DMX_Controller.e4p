@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project ArtNet_DMX_Controller -->
-<!-- Saved: 2016-04-03, 22:39:24 -->
+<!-- Saved: 2016-04-04, 18:41:48 -->
 <!-- Copyright (C) 2016 Beranrd REMOND, nbremond@laposte.net -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -16,21 +16,19 @@
   <Sources>
     <Source>Artnet_light_control.py</Source>
     <Source>__init__.py</Source>
+    <Source>artnet/dmx_NBRLib.py</Source>
+    <Source>artnet/dmx_chase.py</Source>
+    <Source>artnet/dmx_controller.py</Source>
+    <Source>artnet/dmx_cue.py</Source>
+    <Source>artnet/dmx_deamon.py</Source>
+    <Source>artnet/dmx_definitions.py</Source>
+    <Source>artnet/dmx_effects.py</Source>
+    <Source>artnet/dmx_fixture.py</Source>
+    <Source>artnet/dmx_frame.py</Source>
+    <Source>artnet/dmx_packet.py</Source>
+    <Source>artnet/dmx_rig.py</Source>
+    <Source>artnet/dmx_show.py</Source>
     <Source>config.py</Source>
-    <Source>dmx/__init__.py</Source>
-    <Source>dmx/fades.py</Source>
-    <Source>dmx/patterns.py</Source>
-    <Source>dmx_NBRLib.py</Source>
-    <Source>dmx_chase.py</Source>
-    <Source>dmx_controller.py</Source>
-    <Source>dmx_deamon.py</Source>
-    <Source>dmx_definitions.py</Source>
-    <Source>dmx_effects.py</Source>
-    <Source>dmx_fixture.py</Source>
-    <Source>dmx_frame.py</Source>
-    <Source>dmx_packet.py</Source>
-    <Source>dmx_rig.py</Source>
-    <Source>dmx_show.py</Source>
     <Source>fixtures/__init__.py</Source>
     <Source>fixtures/american-dj/megabar-rgb-50.py</Source>
     <Source>fixtures/chauvet/slimpar-64.yaml</Source>
