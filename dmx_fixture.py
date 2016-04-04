@@ -235,11 +235,11 @@ class XYControl(object):
         self.x_offset = None
         self.xfine_offset = None
         self.y_offset = None
-        self.xfine_offset = None
+        self.yfine_offset = None
         self.x_level = 0
         self.xfine_level = 0
         self.y_level = 0
-        self.xfine_level = 0
+        self.yfine_level = 0
     
     def setPosition(self, x, y):
         pass
