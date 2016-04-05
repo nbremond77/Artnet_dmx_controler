@@ -123,7 +123,7 @@ class DmxPacket(ArtNetPacket):
 #        print(len(tmp))
         tmp2 = str.encode(tmp)
 #        print(len(tmp2))
-        return (tmp2[0:512])
+        return (tmp2[0:512]) # [0:512] Added when upgrading from python 2 to 3. Is the end of the string LOST ? BUG ? TBC
     
     def __str__(self):
         return '<DMX(%(sequence)s): %(channels)s>' % dict(
