@@ -33,9 +33,16 @@ def rgb_to_hex(rgb):
 def hex_to_rgbw(value):
     value = value.lstrip('#')
     lv = len(value)
+    while lv < 8:
+            value = value + "0"
+            
     return tuple(int(value[i:i+lv//4], 16) for i in range(0, lv, lv//4))
+        
 
 def rgbw_to_hex(rgbw):
+    while len(rgbw) < 4:
+        rgbw = rgbw + (0,)
+        
     return '#%02x%02x%02x%02x' % rgbw
 
 class FixtureGroup(list):
@@ -119,7 +126,7 @@ class Fixture(object):
     
     def getState(self):
         #do program channels last, since we might be using strobe for speed
-        prg_cmp = lambda a,b: [-1,1][a[0] == 'program']
+#        prg_cmp = lambda a,b: [-1,1][a[0] == 'program']
 #        titi = self.controls.items()
 #        toto = sorted(titi, prg_cmp) ## Sorting is not working in python 3... removed...
 #        for clist in titi:
@@ -247,16 +254,20 @@ class XYControl(object):
         self.y_level = 0
         self.yfine_level = 0
     
-    def setPosition(self, x, y):
-        pass
+    def setPosition(self, x, y,  xfine=0,  yfine=0):
+        self.x_level = x
+        self.xfine_level = xfine
+        self.y_level = y
+        self.yfine_level = yfine
+        return
     
     def configure(self, fixturedef):
-        self.has_fine_control = (xfine is None and yfine is None)
-        self.x_offset = x
-        self.y_offset = y
+        self.has_fine_control = ( ('xfine' in fixturedef['xy_offsets']) and ('yfine' in fixturedef['xy_offsets']))
+        self.x_offset = fixturedef['xy_offsets']['x']
+        self.y_offset = fixturedef['xy_offsets']['y']
         if(self.has_fine_control):
-            self.xfine_offset = xfine
-            self.yfine_offset = yfine
+            self.xfine_offset = fixturedef['xy_offsets']['xfine']
+            self.yfine_offset = fixturedef['xy_offsets']['yfine']
         return 'xy'
     
     def getState(self):

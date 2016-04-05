@@ -1,15 +1,34 @@
-class cure():
-    def __init__(self, stageSetup,  frameName,  fixtureList,  valueList, groupList,  groupValueList,  transitionDuration = 0):
+Cue: cueName2
+{'fixtureList': {}, 'groupList': {'odds': {'transitionTime': 2, 'FX': {}, 'value': [10, 150, 150]}, 'evens': {'transitionTime': 2, 'FX': {'blinkGroup': {'timeOFF': 1, 'timeON': 0.5}}, 'value': [150, 15, 250]}}}
+Cue: cueName1
+{'fixtureList': {'slimpar_1': {'transitionTime': 2, 'FX': {'blinkFixture': {'timeOFF': 10, 'timeON': 25}}, 'value': [10, 20, 150]}, 'slimpar_2': {'transitionTime': 2, 'FX': {}, 'value': [120, 200, 50]}, 'slimpar_4': {'transitionTime': 2, 'FX': {}, 'value': [30, 40, 12]}}, 'groupList': {'odds': {'transitionTime': 2, 'FX': {}, 'value': [10, 150, 150]}}}
+Cue: cueName3
+{'fixtureList': {'slimpar_3': {'transitionTime': 2, 'FX': {}, 'value': [10, 20, 150]}, 'slimpar_4': {'transitionTime': 2, 'FX': {}, 'value': [120, 200, 50]}}, 'groupList': {}}
+Chase: chaseName2
+
+
+
+class Cue(object):
+    def __init__(self, address):
+        self.address = address
+        self.controls = dict()
+    
+    @classmethod
+    def create(cls, address, fixture_path):
+        f = cls(address)
+        f.configure(load(fixture_path))
+        return f
+        
+    def __init__(self, cueName,  fixtureList,  valueList, groupList,  groupValueList,  transitionDuration = 0):
         # Parameters
         #   stageSetup = MyStageSetup
-        #   frameName = "Cue blue ambiance"
+        #   cueName = "Cue blue ambiance"
         #   fixtureList  = ["Chauvet_RGB56#1", "Chauvet_RGB56#2", "Chauvet_RGB56#3", "Chauvet_RGB56#4"]
         #   valueList =  [[10, 120, 30, "RGB"], [10, 120, 30, "Color"], [10, 120, 30, "Auto"], [10, 120, 30, "Music"]]
         #   groupList = ["group1", "group2"]
         #   groupValueList = [[10, 120, 30, "RGB"], [10, 120, 30, "RGB"]]
         #   transitionDuration = 3
 
-        self.stageSetup = stageSetup
         self.name = cueName
         self.fixtureList = fixtureList
         self.valueList = valueList

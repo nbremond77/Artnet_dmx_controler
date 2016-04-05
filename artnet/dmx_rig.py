@@ -25,7 +25,7 @@ class Rig():
         self.name = name
         self.groups = {}
         self.fixtures = {}
-        self.cue = {}
+        self.cues = {}
         self.chases = {}
         self.shows = {}
         self.rig_data = {}
@@ -57,6 +57,8 @@ class Rig():
         # decode Cues
         for name, cue in self.rig_data['cues'].items():
             print("Cue: %s" % name)
+            print(cue)
+            self.cues[name] = dmx_cue.Fixture.create(theFixture['address'], theFixture['config'])
         
         # decode Chases
         for name, chase in self.rig_data['chases'].items():
@@ -78,7 +80,7 @@ class Rig():
             print("  - %s" % group)
 
         print("Cues:")
-        for cue in self.cue:
+        for cue in self.cues:
             print("  %s" % cue)
 
         print("Chases:")
