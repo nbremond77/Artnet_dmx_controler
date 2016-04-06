@@ -1,0 +1,84 @@
+# Example ~/.artnet-rig.yaml file
+{
+    "name": "My personnal Rig",
+    
+    "fixtures": {
+        "rgbw1": {
+            "address": 1,
+            "config": "generic/generic_RGBW.yaml"
+        },
+        "rgbw2": {
+            "address": 5,
+            "config": "generic/generic_RGBW.yaml"
+        },
+        "rgbw3": {
+            "address": 9,
+            "config": "generic/generic_RGBW.yaml"
+        },
+        "dimmer4": {
+            "address": 13,
+            "config": "generic/generic_dimmer.yaml"
+        },
+        "rgbw5": {
+            "address": 14,
+            "config": "generic/generic_RGB.yaml"
+        },
+    },
+    
+    "groups": {
+        "all": ["rgbw1", "rgbw2", "rgbw3", "dimmer4", "rgbw5"],
+        "odds": ["rgbw1", "rgbw3"],
+        "evens": ["rgbw2", "rgbw5"],
+        "dimmers": ["dimmer4"]
+    },
+   
+    "cues": {
+        "cueName1": {
+            "fixtureList": {
+# fixtureName: {"value":[v1, v2, v3, v4], "transitionTime":time_in_seconds, "FX":{fixtureEffect1:{parameter1:value, parameter2:value}, fixtureEffect2{parameter1:value, parameter2:value}} }
+                  "rgbw1": {"value":[10, 20, 150], "transitionTime":2, "FX":{"blinkFixture":{"timeON":25, "timeOFF":10} } },
+                  "rgbw2": {"value":[120, 200, 50], "transitionTime":2, "FX":{} },
+                  "slimpar_4": {"value":[30, 40, 12], "transitionTime":2, "FX":{} }
+            },
+            "groupList": {
+# groupName: {"value":[v1, v2, v3, v4], "transitionTime":time_in_seconds, "FX":{groupEffect1{parameter1:value, parameter2:value}, groupEffect2{parameter1:value, parameter2:value}} }
+                  "odds": {"value":[10, 150, 150], "transitionTime":2, "FX":{} }
+            }
+        },
+        "cueName2": {
+            "fixtureList": {
+            },
+            "groupList": {
+                  "odds": {"value":[10, 150, 150], "transitionTime":2, "FX":{} },
+                  "evens": {"value":[150, 15, 250], "transitionTime":2, "FX":{"blinkGroup":{"timeON":0.5, "timeOFF":1} } }
+            },
+        },
+        "cueName3": {
+            "fixtureList": {
+                  "rgbw3": {"value":[10, 20, 150], "transitionTime":2, "FX":{} },
+                  "dimmer4": {"value":[120, 200, 50], "transitionTime":2, "FX":{} }
+            },
+            "groupList": {
+            }
+        }
+    },
+
+    "chases": {
+        "chaseName1": [
+            #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop},
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue"},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue"},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop"}
+        ],
+        "chaseName2": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue"},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue"},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop"}
+        ]
+    },
+    
+    "shows" : {
+        "showName1": ["chaseName1", "chaseName2"],
+        "showName2": ["chaseName3", "chaseName2", chaseName3"]
+    } 
+}
