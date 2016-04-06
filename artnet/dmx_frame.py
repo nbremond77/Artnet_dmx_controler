@@ -4,6 +4,7 @@ import time, sys, socket, logging, threading, itertools
 
 #from artnet import STANDARD_PORT, OPCODES, packet, daemon
 
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 class Frame(list):

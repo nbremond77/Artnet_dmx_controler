@@ -7,6 +7,7 @@ import pkg_resources as pkg
 #from artnet import dmx
 from artnet import dmx_frame
 
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 def load(defpath):
@@ -24,14 +25,14 @@ def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)
     if lv > 6:
-        value = value[0:5] # skip the last part (the white part) of the color string
+        value = value[0:6] # skip the last part (the white part) of the color string
         lv = len(value)
     return tuple(int(value[i:i+lv//3], 16) for i in range(0, lv, lv//3))
 
 
 def rgb_to_hex(rgb):
     if len(rgb) > 3:
-        rgb = rgb[0:2] # skip the last part (the white part) of the color tuple
+        rgb = rgb[0:3] # skip the last part (the white part) of the color tuple
     return '#%02x%02x%02x' % rgb
 
 
@@ -92,7 +93,8 @@ class Fixture(object):
                 func = getattr(ctrl, fixture_func, None)
                 if(callable(func)):
                     return getattr(ctrl, fixture_func)
-        raise AttributeError(fixture_func)
+        #raise AttributeError(fixture_func)
+        return None
     
     def configure(self, fixturedef):
         if "rgb_offsets" in fixturedef:
@@ -244,7 +246,7 @@ class RGBWControl(object):
         return [
             (self.red_offset, self.red_level),
             (self.green_offset, self.green_level),
-            (self.blue_offset, self.blue_level)
+            (self.blue_offset, self.blue_level), 
             (self.white_offset, self.white_level)
         ]
         

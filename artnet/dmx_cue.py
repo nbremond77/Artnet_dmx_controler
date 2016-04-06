@@ -24,8 +24,11 @@
 }
 """
 
-import time
-from artnet import dmx_frame, dmx_fixture, dmx_effect
+import time,  logging
+from artnet import dmx_frame, dmx_fixture, dmx_effects
+
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
+log = logging.getLogger(__name__)
 
 class Cue(object):
     def __init__(self, cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0):
@@ -61,6 +64,7 @@ class Cue(object):
         
     def configure(self):
 #        ???
+        print("Configure")
         
 
     def getFrame(self):
@@ -68,9 +72,9 @@ class Cue(object):
         
         # Set the values of the fixture
         for fixtureName, actions in enumerate(self.fixtureList):
-            log.debug("Cue: %s Fixture: %s" % (self.cueName, fixtureName)
-            for actionCommand, actionValue in actions
-                log.debug(" - action: %s - %s" % (actionCommand, actionValue)
+            log.debug("Cue: %s Fixture: %s" % (self.cueName, fixtureName))
+            for actionCommand, actionValue in actions:
+                log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 fixtureName.actionCommand(actionValue)
             
             # Merge this values in the current frame
@@ -78,9 +82,9 @@ class Cue(object):
             
         # Set the values of the group
         for groupName, actions in enumerate(self.groupList):
-            log.debug("Cue: %s Group: %s" % (self.cueName, groupName)
-            for actionCommand, actionValue in actions
-                log.debug(" - action: %s - %s" % (actionCommand, actionValue)
+            log.debug("Cue: %s Group: %s" % (self.cueName, groupName))
+            for actionCommand, actionValue in actions:
+                log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 groupName.actionCommand(actionValue)
 
             # Merge this values in the current frame
@@ -90,10 +94,10 @@ class Cue(object):
 
                 
 
-#  	t = time.time()
-#	while(True):
-#		g.setColor('#0000ff')
-#		g.setIntensity(255)
-#		yield g.getFrame()
-#		if(secs and time.time() - t >= secs):
-#			return
+#      t = time.time()
+#    while(True):
+#        g.setColor('#0000ff')
+#        g.setIntensity(255)
+#        yield g.getFrame()
+#        if(secs and time.time() - t >= secs):
+#            return

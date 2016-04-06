@@ -14,6 +14,7 @@ import json
 from artnet import dmx_packet
 from artnet import dmx_definitions
 
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 #def main(config):
@@ -69,6 +70,7 @@ class Poller(threading.Thread):
     def send_dmx(self, frame, universe=1):
         p = dmx_packet.DmxPacket(frame, universe=universe)
         self.sock.sendto(p.encode(), (self.address, dmx_definitions.STANDARD_PORT))
+        log.debug("Send DMX: %s" % p)
     
     def send_poll(self):
         p = dmx_packet.PollPacket(address=self.broadcast_address)

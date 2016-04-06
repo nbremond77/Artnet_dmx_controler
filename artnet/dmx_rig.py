@@ -17,6 +17,7 @@ from artnet import dmx_cue
 from artnet import dmx_chase
 from artnet import dmx_show
 
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
