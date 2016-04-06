@@ -4,6 +4,7 @@
 #
 #  More details.
 
+
 """
 To activate a specific settings for the application, run:
     source env/bin/activate
@@ -69,37 +70,37 @@ app.config.from_object(config.ProductionConfig)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #print(frameList)
+    #log.debug(frameList)
     return render_template('layout_1.html',  buttonList=frameList,  imageList=imageList,  page=currentPage)
 
 
 @app.route('/framePicture', methods = ['POST'])
 def framePicture():
-    print("POST - Frame1")
+    log.debug("POST - Frame1")
     frameName = request.form['Frame']
-    print(frameName)
+    log.debug(frameName)
     for i in frameList:
         #print(i)
         #print(i['name'])
         if (i['name'] == frameName):
             currentFrame = i
-            print('-->FOUND: %s' % currentFrame)
+            log.debug('-->FOUND: %s' % currentFrame)
             break
-    #print(currentFrame)
+    #log.debug(currentFrame)
     return redirect('/')
 
 @app.route('/nextPage', methods = ['GET'])
 def nextPage():
     global currentPage
     currentPage = min(currentPage+1,  MAX_PAGES)
-    print("GET - next - %s" %  currentPage)
+    log.debug("GET - next - %s" %  currentPage)
     return redirect('/')
 
 @app.route('/previousPage', methods = ['GET'])
 def previousPage():
     global currentPage
     currentPage = max(currentPage-1,  1)
-    print("GET - previous - %s" %  currentPage)
+    log.debug("GET - previous - %s" %  currentPage)
     return redirect('/')    
 
 @app.route('/setupPage')
@@ -160,18 +161,18 @@ if __name__ == '__main__':
 #    q = controller or dmx_controller.Controller(config.get('base', 'address'), bpm=60, nodaemon=True, runout=True)
     address = "192.168.0.82"
 
-    print("Configure DMX controller")
+    log.debug("Configure DMX controller")
 
     q = dmx_controller.Controller(address, bpm=30, fps=40,  nodaemon=True, runout=False)
 
-    print("add multifade effect")
+    log.debug("add multifade effect")
 
     q.add(dmx_effects.create_multifade([
         all_red(g),
         all_blue(g),
     ] * 30, secs=65.0))
     
-    print("Start DMX controller")
+    log.debug("Start DMX controller")
     q.start()
 
 
