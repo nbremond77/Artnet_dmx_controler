@@ -1,0 +1,10 @@
+{
+    "manufacturer": "Generic",
+    "name": "RGBW Controller",
+    "rgbw_offsets" : {
+        "red": 0,
+        "blue": 1,
+        "green": 2,
+        "white": 3,
+    },
+}
