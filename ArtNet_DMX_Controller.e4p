@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project ArtNet_DMX_Controller -->
-<!-- Saved: 2016-04-04, 18:41:48 -->
-<!-- Copyright (C) 2016 Beranrd REMOND, nbremond@laposte.net -->
+<!-- Saved: 2016-04-06, 18:31:12 -->
+<!-- Copyright (C) 2016 Bernard REMOND, nbremond@laposte.net -->
 <Project version="5.1">
   <Language>en_US</Language>
   <Hash>5a9f9f7a44fa41080e6c7c78079d650db3d69a82</Hash>
@@ -10,12 +10,13 @@
   <ProjectType>Console</ProjectType>
   <Description></Description>
   <Version>0.1</Version>
-  <Author>Beranrd REMOND</Author>
+  <Author>Bernard REMOND</Author>
   <Email>nbremond@laposte.net</Email>
   <Eol index="-1"/>
   <Sources>
     <Source>Artnet_light_control.py</Source>
     <Source>__init__.py</Source>
+    <Source>artnet/__init__.py</Source>
     <Source>artnet/dmx_NBRLib.py</Source>
     <Source>artnet/dmx_chase.py</Source>
     <Source>artnet/dmx_controller.py</Source>
@@ -31,15 +32,13 @@
     <Source>config.py</Source>
     <Source>fixtures/__init__.py</Source>
     <Source>fixtures/american-dj/megabar-rgb-50.py</Source>
-    <Source>fixtures/chauvet/slimpar-64.yaml</Source>
-    <Source>rigs/my-rig.yaml</Source>
-    <Source>scripts/__init__.py</Source>
     <Source>scripts/all_channels_blackout.py</Source>
     <Source>scripts/all_channels_full.py</Source>
     <Source>scripts/alternating_color_fades.py</Source>
     <Source>scripts/export_packet.py</Source>
     <Source>scripts/layered_chase.py</Source>
     <Source>scripts/listener.py</Source>
+    <Source>scripts/main_test.py</Source>
     <Source>scripts/pulse_beat.py</Source>
     <Source>scripts/rotator.py</Source>
     <Source>scripts/shell.py</Source>
@@ -49,6 +48,13 @@
   <Translations/>
   <Resources>
     <Resource>README.md</Resource>
+    <Resource>fixtures/chauvet/slimpar-64.yaml</Resource>
+    <Resource>fixtures/generic/generic_RGB.yaml</Resource>
+    <Resource>fixtures/generic/generic_RGBW.yaml</Resource>
+    <Resource>fixtures/generic/generic_dimmer.yaml</Resource>
+    <Resource>rigs/artnet-rig.yaml</Resource>
+    <Resource>rigs/my-rig.yaml</Resource>
+    <Resource>rigs/my-rig_2.yaml</Resource>
     <Resource>static/About-48.png</Resource>
     <Resource>static/About.png</Resource>
     <Resource>static/Help.png</Resource>
@@ -60,6 +66,7 @@
     <Resource>static/arrow1.png</Resource>
     <Resource>static/arrow1_SmallL.png</Resource>
     <Resource>static/arrow1_SmallR.png</Resource>
+    <Resource>static/au_revoir_poster_1.png</Resource>
     <Resource>static/douche1.jpg</Resource>
     <Resource>static/douche10.jpg</Resource>
     <Resource>static/douche2.jpg</Resource>
@@ -201,5 +208,6 @@
     <FiletypeAssociation pattern="*.py2" type="SOURCES"/>
     <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
     <FiletypeAssociation pattern="*.pyw2" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.yaml" type="RESOURCES"/>
   </FiletypeAssociations>
 </Project>

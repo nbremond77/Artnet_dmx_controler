@@ -32,8 +32,8 @@ from artnet import dmx_effects
 
 
 
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
-
 
 frameList=[]
 aFrame = dict(name='Douche_simple',  image='static/douche1.jpg',  page=1)
@@ -130,7 +130,21 @@ def all_blue(g):
     g.setIntensity(255)
     return g.getFrame()
 
-    
+def all_white(g):
+    """
+    Create an all-red frame.
+    """
+    g.setColor('#bbbbbb22')
+    g.setIntensity(255)
+    return g.getFrame()    
+
+def all_gray(g):
+    """
+    Create an all-red frame.
+    """
+    g.setColor('#80808033')
+    g.setIntensity(120)
+    return g.getFrame()    
     
 #######################################################
 
@@ -149,10 +163,13 @@ if __name__ == '__main__':
     # Create and load the current rig pararmeters
 #    myRig =  rig_setup.get_default_rig()
     myRig = dmx_rig.Rig()
-    myRig.load("/home/nbremond/myCloud/Projets_NBR/Electronique/ArtNet DMX Controller/Artnet_dmx_controler/rigs/my-rig.yaml")
+    myRig.load("/home/nbremond/myCloud/Projets_NBR/Electronique/ArtNet DMX Controller/Artnet_dmx_controler/rigs/my-rig_2.yaml")
     myRig.printRig()
     
     g = myRig.groups['all']
+    g1 = myRig.groups['odds']
+    g2 = myRig.groups['evens']
+    g3 = myRig.groups['dimmers']
     
 
     log.info("Running script %s" % __name__)
@@ -160,20 +177,28 @@ if __name__ == '__main__':
     # g = get_default_fixture_group(config)
 #    q = controller or dmx_controller.Controller(config.get('base', 'address'), bpm=60, nodaemon=True, runout=True)
     address = "192.168.0.82"
+#    address = ""
 
     log.debug("Configure DMX controller")
 
     q = dmx_controller.Controller(address, bpm=30, fps=40,  nodaemon=True, runout=False)
 
-    log.debug("add multifade effect")
+    log.debug("add effect")
 
-    q.add(dmx_effects.create_multifade([
-        all_red(g),
-        all_blue(g),
-    ] * 30, secs=65.0))
+#    q.add(dmx_effects.create_multifade([
+#        all_red(g),
+#        all_blue(g),
+#    ] * 60, secs=3.0))
+    
+#    q.add(dmx_effects.create_multiframe([all_gray(g),  all_white(g)]*60, secs=3.0))
+#    q.add(dmx_effects.create_multifade([all_gray(g1),  all_white(g1)]*60, secs=60.0)) # Color
+#    q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*60, secs=60.0)) # Color
+    q.add(dmx_effects.create_multiframe([all_gray(g3),  all_white(g3)]*60, secs=90.0)) # Dimmer
     
     log.debug("Start DMX controller")
     q.start()
+
+    log.debug("Continue initialization")
 
 
 #    time.sleep(5)
@@ -184,8 +209,10 @@ if __name__ == '__main__':
     
     # Run the web server on port 5000
     print("Run the web server on port 5000")
+    log.debug("Run the web server on port 5000")
     app.run('0.0.0.0')
     
     # stop the DMX thread
 #    myDMXthread.stop()
 
+    log.debug("End of processing.")
