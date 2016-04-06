@@ -7,6 +7,15 @@ from artnet import dmx_frame
 
 log = logging.getLogger(__name__)
 
+def create_cuelist(frames, frameDurations, frameTransitionTime, fps=40):
+	result = []
+	total_frames = len(frames)
+	for index in range(total_frames):
+		if(index < len(frames) - 1):
+			fade = generate_fade(frames[index], frames[index+1], secs/(total_frames-1), fps)
+			result.extend(list(fade))
+	return iter(result)
+    
 def create_multifade(frames, secs=5.0, fps=40):
 	result = []
 	total_frames = len(frames)
@@ -19,10 +28,13 @@ def create_multifade(frames, secs=5.0, fps=40):
 def generate_fade(start, end, secs=5.0, fps=40):
 	for index in range(int(secs * fps)):
 		f = dmx_frame.Frame()
-		for channel in range(len(start)):
-			a = start[channel] or 0
-			b = end[channel] or 0
-			f[channel] = int(a + (((b - a) / (secs * fps)) * index))
+        if secs > 1/fps:
+            for channel in range(len(start)):
+                a = start[channel] or 0
+                b = end[channel] or 0
+                f[channel] = int(a + (((b - a) / (secs * fps)) * index))
+        else:
+            f = end
 		yield f
 
 def pulse_beat(clock, start, end, secs=5.0):

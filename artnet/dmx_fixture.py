@@ -23,10 +23,15 @@ def load(defpath):
 def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)
+    if lv > 6:
+        value = value[0:5] # skip the last part (the white part) of the color string
+        lv = len(value)
     return tuple(int(value[i:i+lv//3], 16) for i in range(0, lv, lv//3))
 
 
 def rgb_to_hex(rgb):
+    if len(rgb) > 3:
+        rgb = rgb[0:2] # skip the last part (the white part) of the color tuple
     return '#%02x%02x%02x' % rgb
 
 
@@ -34,7 +39,8 @@ def hex_to_rgbw(value):
     value = value.lstrip('#')
     lv = len(value)
     while lv < 8:
-            value = value + "0"
+        value = value + "0"
+        lv = len(value)
             
     return tuple(int(value[i:i+lv//4], 16) for i in range(0, lv, lv//4))
         
@@ -132,7 +138,7 @@ class Fixture(object):
 #        for clist in titi:
 #            for c in clist[1]:
 #                for x in c.getState():
-#                    print(x)
+#                    log.debug(x)
 #        return [x for clist in sorted(self.controls.items(), prg_cmp) for c in clist[1] for x in c.getState()]
         return [x for clist in (self.controls.items()) for c in clist[1] for x in c.getState()]
     

@@ -17,12 +17,14 @@ class Controller(dmx_deamon.Poller):
         self.fpb = (fps * 60) / bpm
         self.last_frame = dmx_frame.Frame()
         self.generators = []
+        self.generatorsActivationTime = dict()
         self.access_lock = threading.Lock()
         self.runout = runout
         self.frameindex = 0
         self.beatindex = 0
         self.beat = 0
         self.autocycle = dmx_frame.AutoCycler(self)
+        self.startTime = time.time()
     
     def get_clock(self):
         def _clock():
@@ -34,7 +36,8 @@ class Controller(dmx_deamon.Poller):
                 beatindex = self.beatindex,
                 fpb = self.fpb,
                 running = self.running,
-                last = self.last_frame
+                last = self.last_frame,
+                startTime = self.startTime
             )
         return _clock
     
@@ -46,23 +49,26 @@ class Controller(dmx_deamon.Poller):
         finally:
             self.access_lock.release()
     
-    def add(self, generator):
+    def add(self, generator, activationTime = 0.0):
         try:
             self.access_lock.acquire()
             if(self.autocycle.enabled):
                 self.generators.append(itertools.cycle(generator))
+                self.generatorsActivationTime.[generator] = activationTime
             else:
                 self.generators.append(generator)
+                self.generatorsActivationTime.[generator] = activationTime
         finally:
             self.access_lock.release()
     
     def iterate(self):
         f = self.last_frame
         for g in self.generators:
-            #print(g)
+            #log.debug(g)
             try:
-                n = g.__next__()
-                f = f.merge(n) if f else n
+                n = g.__next__() # Why next ? A EXPLIQUER...
+                if self.generatorsActivationTime.[g] <= time.time():
+                    f = f.merge(n) if f else n
             except StopIteration:
                 self.generators.remove(g)
         
@@ -78,6 +84,7 @@ class Controller(dmx_deamon.Poller):
     
     def run(self):
         now = time.time()
+        self.startTime = now
         while(self.running):
             drift = now - time.time()
             

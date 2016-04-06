@@ -38,35 +38,40 @@ class Rig():
         # Load rig configuration file
         with open(config_path, 'r') as f:
             self.rig_data = yaml.safe_load(f)
+            
+        log.debug(self.rig_data)
         
         # Rig global parameters
         self.name = self.rig_data['name']
         
         # decode Fixtures
         for name, theFixture in self.rig_data['fixtures'].items():
-            print("Fixture: %s" % name)
+            log.debug("Fixture: %s" % name)
+            log.debug(theFixture)
             self.fixtures[name] = dmx_fixture.Fixture.create(theFixture['address'], theFixture['config'])
 
         # Decode groups
         for name, group in self.rig_data['groups'].items():
-            print("Group: %s" % name)
+            log.debug("Group: %s" % name)
+            log.debug(group)
             self.groups[name] = dmx_fixture.FixtureGroup([
                 self.fixtures[g] for g in group
             ])
     
         # decode Cues
         for name, cue in self.rig_data['cues'].items():
-            print("Cue: %s" % name)
-            print(cue)
-            self.cues[name] = dmx_cue.Fixture.create(theFixture['address'], theFixture['config'])
+            log.debug("Cue: %s" % name)
+            log.debug(cue)
         
         # decode Chases
         for name, chase in self.rig_data['chases'].items():
-            print("Chase: %s" % name)
+            log.debug("Chase: %s" % name)
+            log.debug(chase)
         
         # decode Shows
         for name, show in self.rig_data['shows'].items():
-            print("Show: %s" % name)
+            log.debug("Show: %s" % name)
+            log.debug(show)
 
     def printRig(self):
         print("*** RIG %s ***" % self.name)
