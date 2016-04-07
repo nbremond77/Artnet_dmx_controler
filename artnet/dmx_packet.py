@@ -14,6 +14,7 @@ import bitstring
 from artnet import dmx_definitions
 from artnet import dmx_frame
 
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 class ArtNetPacket(object):
@@ -51,7 +52,7 @@ class ArtNetPacket(object):
         
         return p
 
-    def __init__(self, address=None, sequence=0, physical=0, universe=1):
+    def __init__(self, address=None, sequence=0, physical=0, universe=0):
         self.address = address
         self.sequence = sequence
         self.physical = physical
@@ -79,8 +80,8 @@ class ArtNetPacket(object):
                 value = getattr(self, name)
             fields.append([name, fmt, value])
         
-        fmt = ', '.join(['='.join([f,n]) for n,f,v in fields])
-        data = dict([(n,v) for n,f,v in fields])
+#        fmt = ', '.join(['='.join([f,n]) for n,f,v in fields])
+#        data = dict([(n,v) for n,f,v in fields])
 #        log.debug(" data= %s" % data)
 #        log.debug(" fmt = '%s'" % fmt)
 #        log.debug("toto = bitstring.pack(fmt, **data)")
@@ -88,8 +89,12 @@ class ArtNetPacket(object):
 #        log.debug("DEBUG -- bitstring.pack(fmt, **data): %s" % pack)
 #        pack_byte = pack.tobytes()
 #        log.debug("DEBUG -- pack_byte: %s" % pack_byte)
-        return bitstring.pack(fmt, **data).tobytes() # ATTENTION BUG POSSIBLE : Sorting has been removed during migration to python 3
-
+#        return bitstring.pack(fmt, **data).tobytes() # ATTENTION BUG POSSIBLE : Sorting has been removed during migration to python 3
+        
+		fmt = ', '.join(['='.join([f,n]) for n,f,v in fields])
+		data = dict([(n,v) for n,f,v in fields])
+		return bitstring.pack(fmt, **data).tobytes()
+        
 @ArtNetPacket.register
 class DmxPacket(ArtNetPacket):
     opcode = dmx_definitions.OPCODES['OpDmx']
@@ -116,13 +121,15 @@ class DmxPacket(ArtNetPacket):
         return len(self.frame)
     
     def format_framedata(self):
-        tmp = ''.join([chr(i or 0) for i in self.frame])
+#        tmp = ''.join([chr(i or 0) for i in self.frame])
 #        log.debug(len(tmp))
 #        tmp = tmp[0:512]
 #        log.debug(len(tmp))
-        tmp2 = str.encode(tmp)
+#        tmp2 = str.encode(tmp)
 #        log.debug(len(tmp2))
-        return (tmp2[0:512]) # ATTENTION BUG POSSIBLE !!! The [0:512] has been added for migration to python 3. Is the end of the frame missing ?
+#        return (tmp2[0:512]) # ATTENTION BUG POSSIBLE !!! The [0:512] has been added for migration to python 3. Is the end of the frame missing ?
+         return b''.join([chr(i or 0) for i in self.frame])
+        # return ''.join([chr(i or 0) for i in self.frame])
     
     def __str__(self):
         return '<DMX(%(sequence)s): %(channels)s>' % dict(

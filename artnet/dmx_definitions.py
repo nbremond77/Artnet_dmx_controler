@@ -1,4 +1,4 @@
-STANDARD_PORT = 6454
+STANDARD_PORT = 6454 # 0x1936
 
 OPCODES = dict(
 	# This is an ArtPoll packet, no other data is contained in this UDP packet. 
