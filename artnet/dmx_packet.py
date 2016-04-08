@@ -128,8 +128,8 @@ class DmxPacket(ArtNetPacket):
 #        tmp2 = str.encode(tmp)
 #        log.debug(len(tmp2))
 #        return (tmp2[0:512]) # ATTENTION BUG POSSIBLE !!! The [0:512] has been added for migration to python 3. Is the end of the frame missing ?
-         return b''.join([chr(i or 0) for i in self.frame])
         # return ''.join([chr(i or 0) for i in self.frame])
+         return b''.join([chr(i or 0) for i in self.frame])
     
     def __str__(self):
         return '<DMX(%(sequence)s): %(channels)s>' % dict(

@@ -70,7 +70,7 @@ class Controller(dmx_deamon.Poller):
     def iterate(self):
         f = self.last_frame
         for g in self.generators:
-            #print(g)
+            log.debug("Iterate generato: %s" % g))
             try:
                 n = g.__next__()
                 f = f.merge(n) if f else n
@@ -96,7 +96,7 @@ class Controller(dmx_deamon.Poller):
             
             # do anything potentially framerate-affecting here
             self.iterate()
-#            self.handle_artnet()
+            self.handle_artnet()
             
             self.send_dmx(self.last_frame)
             

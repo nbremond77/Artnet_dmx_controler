@@ -8,17 +8,32 @@ from artnet import dmx_frame
 logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
-def create_cuelist(frames, frameDurations, frameTransitionTime, fps=40):
-    result = []
-    total_frames = len(frames)
-    for index in range(total_frames):
-        if(index < len(frames) - 1):
-            fade = generate_fade(frames[index], frames[index+1], secs/(total_frames-1), fps)
-            result.extend(list(fade))
-    return iter(result)
+def create_cuelistRun(clock, frames, frameDurations = [], frameTransitionTimes = [], fps=20):
+    while len(frameDurations) < len(frames) :
+        frameDurations.append(10.0) # 10 seconds is the default duration
+    while len(frameTransitionTimes) < len(frames) :
+        frameTransitionTimes.append(2.0) # 2 seconds is the default transition duration
+        
+    c = clock()
+    
+    for frameIndex in range(frames):
+        frame_startTime = time.time()
+        frame_endTransitionTime = frame_startTime + frameTransitionTimes[frameIndex]
+        frame_endTime = frame_startTime + frameDurations[frameIndex]
+
+        while(c['running'] and (time.time() < frame_endTime)):
+            if(time.time() < frame_endTransitionTime) and (frameIndex > 0):
+                fade = generate_fade(frames[frameIndex-1], frames[frameIndex], frameTransitionTimes[frameIndex], fps)
+                #result.extend(list(fade))
+                #return iter(result)
+                yield fade
+            else:
+                yield frames[frameIndex]
+            c = clock()
 
 
-def create_multiframe(frames, secs=5.0, fps=40):
+
+def create_multiframe(frames, secs=5.0, fps=20):
     result = []
     total_frames = len(frames)
     for index in range(total_frames):
@@ -27,7 +42,7 @@ def create_multiframe(frames, secs=5.0, fps=40):
             result.extend(list(fade))
     return iter(result)
 
-def generate_cut(start,  end, secs=5.0, fps=40):
+def generate_cut(start,  end, secs=5.0, fps=20):
     for index in range(int(secs * fps)):
 #        f = dmx_frame.Frame()
 #        f = end
@@ -36,7 +51,7 @@ def generate_cut(start,  end, secs=5.0, fps=40):
         else:
             yield end
         
-def create_multifade(frames, secs=5.0, fps=40):
+def create_multifade(frames, secs=5.0, fps=20):
     result = []
     total_frames = len(frames)
     for index in range(total_frames):
@@ -45,7 +60,7 @@ def create_multifade(frames, secs=5.0, fps=40):
             result.extend(list(fade))
     return iter(result)
 
-def generate_fade(start, end, secs=5.0, fps=40):
+def generate_fade(start, end, secs=5.0, fps=20):
     for index in range(int(secs * fps)):
         f = dmx_frame.Frame()
         if secs > 1/fps:
