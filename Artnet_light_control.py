@@ -25,6 +25,7 @@ from artnet import dmx_fixture
 from artnet import dmx_frame
 from artnet import dmx_chase
 from artnet import dmx_show
+from artnet import dmx_cue
 from artnet import dmx_controller
 from artnet import dmx_effects
 
@@ -55,6 +56,38 @@ imageList = ['static/douche1.jpg',  'static/douche2.jpg',  'static/douche3.jpg',
 currentPage = 1
 
 
+
+#Tsample = 2 # sampling time in seconds
+TIMEOUT = 5*60 # Time in second before blackout when no action is done
+hostIP = "192.168.0.82" # Target for the ArtNet frames, or empty for broadcast
+
+# Create and load the current rig pararmeters
+#    myRig =  rig_setup.get_default_rig()
+myRig = dmx_rig.Rig()
+myRig.load("/home/nbremond/myCloud/Projets_NBR/Electronique/ArtNet DMX Controller/Artnet_dmx_controler/rigs/my-rig_2.yaml")
+myRig.printRig()
+
+g = myRig.groups['all']
+g1 = myRig.groups['odds']
+g2 = myRig.groups['evens']
+g3 = myRig.groups['dimmers']
+
+
+log.info("Running script %s" % __name__)
+# global g
+# g = get_default_fixture_group(config)
+#    q = controller or dmx_controller.Controller(config.get('base', 'address'), bpm=60, nodaemon=True, runout=True)
+address = "192.168.0.82"
+#    address = ""
+
+log.debug("Configure DMX controller")
+
+#    q = dmx_controller.Controller(address, bpm=30, fps=20,  nodaemon=True, runout=False,  universe=1)
+q = dmx_controller.Controller(address, bpm=30, fps=20,  timeout=TIMEOUT,  nodaemon=True, runout=False,  universe=1)
+    
+    
+    
+    
 # Create the application
 app = Flask(__name__)
 
@@ -64,8 +97,8 @@ import config
 
 # Load app configuration
 #app.config.from_object(os.environ['APP_SETTINGS'])
-#app.config.from_object(config.DevelopmentConfig)
-app.config.from_object(config.ProductionConfig)
+app.config.from_object(config.DevelopmentConfig)
+#app.config.from_object(config.ProductionConfig)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -74,8 +107,8 @@ def index():
     return render_template('layout_1.html',  buttonList=frameList,  imageList=imageList,  page=currentPage)
 
 
-@app.route('/framePicture', methods = ['POST'])
-def framePicture():
+@app.route('/sceneButton', methods = ['POST'])
+def sceneButton():
     log.debug("POST - Frame1")
     frameName = request.form['Frame']
     log.debug(frameName)
@@ -84,7 +117,24 @@ def framePicture():
         #print(i['name'])
         if (i['name'] == frameName):
             currentFrame = i
-            log.debug('-->FOUND: %s' % currentFrame)
+            log.debug('-->FOUND: %s - %s' % (frameName,  currentFrame))
+
+
+            
+            log.debug("add effect 2")
+            q.removeAll()
+            q.add(dmx_effects.create_frameListRun(q.get_clock(), frames=[
+                all_gray(g3),  
+                all_white(g3), 
+                all_red(g1),
+                all_blue(g1),
+                ]*20, frameDurations=[ 5,  10,  15,  20]*20, 
+                frameTransitionTimes=[ 1,  2,  4,  8]*20))
+
+    
+            print("Run 1st effect")
+            log.info("Run 1st effect")
+
             break
     #log.debug(currentFrame)
     return redirect('/')
@@ -94,6 +144,9 @@ def nextPage():
     global currentPage
     currentPage = min(currentPage+1,  MAX_PAGES)
     log.debug("GET - next - %s" %  currentPage)
+
+    q.removeAll()
+    q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*10, totalDuration=30.0)) # Color
     return redirect('/')
 
 @app.route('/previousPage', methods = ['GET'])
@@ -101,15 +154,27 @@ def previousPage():
     global currentPage
     currentPage = max(currentPage-1,  1)
     log.debug("GET - previous - %s" %  currentPage)
+
+    q.removeAll()
+    q.add(dmx_effects.create_multifade([all_red(g1),  all_blue(g1)]*10, totalDuration=30.0)) # Color
     return redirect('/')    
 
 @app.route('/setupPage')
 def setupPage():
+    log.debug("add effect 1")
+#    q.add(dmx_effects.create_multifade([
+#        all_red(g1),
+#        all_blue(g1),
+#    ] * 2, totalDuration=5.0)) 
+    q.removeAll()
+    q.add(iter([[255] * 512]))   
     return 'The configuration page'
 
     
 @app.route('/aboutPage')
 def aboutPage():
+    q.removeAll()
+    q.add(iter([[0] * 512]))
     return 'The about page'
 
 
@@ -118,16 +183,16 @@ def all_red(g):
     """
     Create an all-red frame.
     """
-    g.setColor('#ff0000')
-    g.setIntensity(255)
+    g.setColor('#fe0000')
+    g.setIntensity(55)
     return g.getFrame()
 
 def all_blue(g):
     """
     Create an all-blue frame.
     """
-    g.setColor('#0000ff')
-    g.setIntensity(255)
+    g.setColor('#0000ef')
+    g.setIntensity(160)
     return g.getFrame()
 
 def all_white(g):
@@ -157,45 +222,60 @@ if __name__ == '__main__':
 
     :returns: none
     """
-    Tsample = 2 # sampling time in seconds
-    hostIP = "192.168.0.82" # Target for the ArtNet frames, or empty for broadcast
+    """
+    {
+      'initialTransitionTime': 2,
+      'fixtureList': {
+        'slimpar_1': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}, 
+        'slimpar_2': {'setColor': '#FE1233', 'setIntensity':200}, 
+        'slimpar_4': {'setIntensity':200}
+      }, 
+      'groupList': {
+        'odds': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}
+      }
+      'effectList': {
+        'blinkFixture': {{'group':'odd', 'group':'even', 'fixture':'slimpar_1'}, {'timeOFF': 10, 'timeON': 25}},
+      }
+    }
+    """
 
-    # Create and load the current rig pararmeters
-#    myRig =  rig_setup.get_default_rig()
-    myRig = dmx_rig.Rig()
-    myRig.load("/home/nbremond/myCloud/Projets_NBR/Electronique/ArtNet DMX Controller/Artnet_dmx_controler/rigs/my-rig_2.yaml")
-    myRig.printRig()
+    cueName = 'myCue1'
+    fixtureList = {
+        'slimpar_1': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}, 
+        'slimpar_2': {'setColor': '#FE1233', 'setIntensity':200}, 
+        'slimpar_4': {'setIntensity':200}
+        }
+    groupList = {
+        'odds': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}
+        }
+#    myCue1 = Cue(cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0)
+    myCue1 = dmx_cue.Cue(cueName, fixtureList,  groupList,  {}, initialTransitionDuration = 2)
+    print(myCue1)
     
-    g = myRig.groups['all']
-    g1 = myRig.groups['odds']
-    g2 = myRig.groups['evens']
-    g3 = myRig.groups['dimmers']
+    myFrame = myCue1.getFrame()
+    print(myFrame)
+
+
+#    q.run()
+
+#    q.add(dmx_effects.create_multiframe([all_gray(g),  all_white(g)]*60, totalDuration=3.0))
+#    q.add(dmx_effects.create_multifade([all_gray(g1),  all_white(g1)]*60, totalDuration=60.0)) # Color
+
+#    q.add(dmx_effects.create_multiframe([all_gray(g3),  all_white(g3)]*3, totalDuration=10.0)) # Dimmer
+#    print("Run 2nd effect")
+#    log.info("Run 2nd effect")
+#    q.run()
     
 
-    log.info("Running script %s" % __name__)
-    # global g
-    # g = get_default_fixture_group(config)
-#    q = controller or dmx_controller.Controller(config.get('base', 'address'), bpm=60, nodaemon=True, runout=True)
-    address = "192.168.0.82"
-#    address = ""
 
-    log.debug("Configure DMX controller")
-
-    q = dmx_controller.Controller(address, bpm=30, fps=40,  nodaemon=True, runout=False)
-
-    log.debug("add effect")
-
-#    q.add(dmx_effects.create_multifade([
-#        all_red(g),
-#        all_blue(g),
-#    ] * 60, secs=3.0))
+#    q.run()
     
-#    q.add(dmx_effects.create_multiframe([all_gray(g),  all_white(g)]*60, secs=3.0))
-#    q.add(dmx_effects.create_multifade([all_gray(g1),  all_white(g1)]*60, secs=60.0)) # Color
-#    q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*60, secs=60.0)) # Color
-    q.add(dmx_effects.create_multiframe([all_gray(g3),  all_white(g3)]*60, secs=90.0)) # Dimmer
+
     
-    log.debug("Start DMX controller")
+#    q2 = dmx_controller.Controller(address, bpm=30, fps=20,  nodaemon=True, runout=False,  universe=1)
+#    q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*60, totalDuration=60.0)) # Color
+#    print("Start DMX controller with other effect")
+    log.info("Start DMX controller with other effect")
     q.start()
 
     log.debug("Continue initialization")
