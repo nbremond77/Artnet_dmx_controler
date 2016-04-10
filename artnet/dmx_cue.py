@@ -46,7 +46,7 @@ class Cue(object):
         self.initialTransitionDuration = initialTransitionDuration
 #        self.controls = dict()
 
-        self.configure()
+#        self.configure()
 
 
     def update(self,  fixtureList=None,  groupList=None,  effectList = None, initialTransitionDuration = None):
@@ -62,18 +62,14 @@ class Cue(object):
         self.configure()
 
         
-    def configure(self):
-#        ???
-        print("Configure")
-        
 
     def getFrame(self):
         theFrame = dmx_frame.Frame()
         
         # Set the values of the fixture
-        for fixtureName, actions in enumerate(self.fixtureList):
-            log.debug("Cue: %s Fixture: %s" % (self.cueName, fixtureName))
-            for actionCommand, actionValue in actions:
+        for fixtureName, actions in self.fixtureList.items():
+            log.debug("Cue: %s Fixture: %s" % (self.name, fixtureName))
+            for actionCommand, actionValue in actions.items():
                 log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 fixtureName.actionCommand(actionValue)
             
@@ -81,9 +77,9 @@ class Cue(object):
             theFrame.merge(fixtureName.getFrame())
             
         # Set the values of the group
-        for groupName, actions in enumerate(self.groupList):
+        for groupName, actions in self.groupList.items():
             log.debug("Cue: %s Group: %s" % (self.cueName, groupName))
-            for actionCommand, actionValue in actions:
+            for actionCommand, actionValue in actions.items():
                 log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 groupName.actionCommand(actionValue)
 

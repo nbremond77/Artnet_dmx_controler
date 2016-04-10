@@ -73,6 +73,9 @@ class FixtureGroup(list):
                 if(offset is None):
                     continue
                 frame[(f.address - 1) + offset] = value
+
+        log.debug("getFrame: %s" % frame[0:30])            
+        
         return frame
 
 
@@ -142,7 +145,9 @@ class Fixture(object):
 #                for x in c.getState():
 #                    log.debug(x)
 #        return [x for clist in sorted(self.controls.items(), prg_cmp) for c in clist[1] for x in c.getState()]
-        return [x for clist in (self.controls.items()) for c in clist[1] for x in c.getState()]
+        tmp = [x for clist in (self.controls.items()) for c in clist[1] for x in c.getState()]
+        log.debug("getState: %s" % tmp)
+        return tmp
     
     def getFrame(self):
         frame = dmx_frame.Frame()
@@ -150,6 +155,8 @@ class Fixture(object):
             if(offset is None):
                 continue
             frame[(self.address - 1) + offset] = value
+            
+        log.debug("getFrame: %s" % frame[0:30])            
         return frame
     
     def triggerMacro(self, macro_type, macro, speed=None):
@@ -218,11 +225,12 @@ class RGBWControl(object):
     
     def setColor(self, hexcode):
         # for some reason this is out of order
-        r, b, g,  w = hex_to_rgbw(str(hexcode))
+        r, b, g, w = hex_to_rgbw(str(hexcode))
         self.red_level = r
         self.green_level = g
         self.blue_level = b
         self.white_level = w
+        log.debug("SetColor RGBW: (r:%s, b:%s, g:%s, w:%s)" % (r, b, g,  w))
     
     def getColor(self):
         # for some reason this is out of order
@@ -362,6 +370,7 @@ class IntensityControl(object):
     
     def setIntensity(self, value):
         self.intensity_value = value
+        log.debug("SetIntensity: %s" % self.intensity_value)
     
     def getIntensity(self):
         return self.intensity_value

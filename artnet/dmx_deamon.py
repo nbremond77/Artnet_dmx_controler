@@ -85,3 +85,4 @@ class Poller(threading.Thread):
         
         log.debug("send: %s" % r)
         self.sock.sendto(r.encode(), (r.address, dmx_definitions.STANDARD_PORT))
+

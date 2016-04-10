@@ -9,13 +9,16 @@ logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_control
 log = logging.getLogger(__name__)
 
 class Controller(dmx_deamon.Poller):
-    def __init__(self, address, nodaemon=False, runout=False, fps=10.0, bpm=60.0, measure=4):
+    def __init__(self, address, nodaemon=False, runout=False, fps=10.0, bpm=60.0, measure=4,  timeout=0,  universe=0):
         super(Controller, self).__init__(address, nodaemon=nodaemon, runout=runout)
 
+        self.universe = universe
         self.fps = fps
         self.bpm = bpm
         self.measure = measure
         self.fpb = (fps * 60) / bpm
+        self.timeout = timeout
+        self.currentTimeForBlackout = time.time() + timeout
         self.last_frame = dmx_frame.Frame()
         self.generators = []
 #        self.generatorsActivationTime = []
@@ -52,25 +55,36 @@ class Controller(dmx_deamon.Poller):
             self.access_lock.release()
     
     def add(self, generator):
-#    def add(self, generator, activationTime = 0.0):
-
+        self.currentTimeForBlackout = time.time() + self.timeout
         try:
             self.access_lock.acquire()
             if(self.autocycle.enabled):
                 self.generators.append(itertools.cycle(generator))
-#                self.generatorsActivationTime.append(activationTime)
                 log.debug("Add cyclic generator: %s" % generator)
             else:
                 self.generators.append(generator)
- #               self.generatorsActivationTime.append(activationTime)
                 log.debug("Add cyclic generator: %s" % generator)
         finally:
             self.access_lock.release()
     
+
+    def removeAll(self):
+        self.access_lock.acquire()
+        self.generators = []
+        self.access_lock.release()
+
+    def blackOut(self):
+        self.access_lock.acquire()
+        self.generators = []
+        self.last_frame = dmx_frame.Frame([0] * 512)
+        self.access_lock.release()
+        self.currentTimeForBlackout = time.time() + self.timeout
+
+
     def iterate(self):
         f = self.last_frame
         for g in self.generators:
-            log.debug("Iterate generato: %s" % g))
+            #print(g)
             try:
                 n = g.__next__()
                 f = f.merge(n) if f else n
@@ -88,6 +102,7 @@ class Controller(dmx_deamon.Poller):
         self.last_frame = f
     
     def run(self):
+        self.running = True
         now = time.time()
         self.startTime = now
         log.debug("Start run...")
@@ -95,10 +110,13 @@ class Controller(dmx_deamon.Poller):
             drift = now - time.time()
             
             # do anything potentially framerate-affecting here
+            if (time.time() > self.currentTimeForBlackout) and (self.timeout > 0.1):
+                self.blackOut()
+                
             self.iterate()
-            self.handle_artnet()
+#            self.handle_artnet()
             
-            self.send_dmx(self.last_frame)
+            self.send_dmx(self.last_frame,  universe=self.universe)
             
             if(self.runout and len(self.generators) == 0):
                 self.running = False
@@ -112,3 +130,4 @@ class Controller(dmx_deamon.Poller):
                 log.warning("Frame rate loss; generators took %sms too long" % round(abs(excess * 1000)))
             now = time.time()
             log.debug("Run...")
+

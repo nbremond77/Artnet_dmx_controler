@@ -91,9 +91,9 @@ class ArtNetPacket(object):
 #        log.debug("DEBUG -- pack_byte: %s" % pack_byte)
 #        return bitstring.pack(fmt, **data).tobytes() # ATTENTION BUG POSSIBLE : Sorting has been removed during migration to python 3
         
-		fmt = ', '.join(['='.join([f,n]) for n,f,v in fields])
-		data = dict([(n,v) for n,f,v in fields])
-		return bitstring.pack(fmt, **data).tobytes()
+        fmt = ', '.join(['='.join([f,n]) for n,f,v in fields])
+        data = dict([(n,v) for n,f,v in fields])
+        return bitstring.pack(fmt, **data).tobytes()
         
 @ArtNetPacket.register
 class DmxPacket(ArtNetPacket):
@@ -129,7 +129,10 @@ class DmxPacket(ArtNetPacket):
 #        log.debug(len(tmp2))
 #        return (tmp2[0:512]) # ATTENTION BUG POSSIBLE !!! The [0:512] has been added for migration to python 3. Is the end of the frame missing ?
         # return ''.join([chr(i or 0) for i in self.frame])
-         return b''.join([chr(i or 0) for i in self.frame])
+        tmp = bytearray()
+        for i in self.frame:
+            tmp.append(i or 0)
+        return tmp
     
     def __str__(self):
         return '<DMX(%(sequence)s): %(channels)s>' % dict(
