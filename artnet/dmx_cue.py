@@ -32,19 +32,22 @@ log = logging.getLogger(__name__)
 
 class Cue(object):
     def __init__(self, cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0):
-        # Parameters
-        #   cueName = "Cue blue ambiance"
-        #   fixtureList  = {}
-        #   groupList = {}
-        #   effectList = {}
-        #   initialTransitionDuration = 3
-
+ 
+        fixtureList  = {}
+        groupList = {}
+        effectList = {}
+ 
         self.name = cueName
-        self.fixtureList = fixtureList
-        self.groupList = groupList
-        self.effectList = effectList
         self.initialTransitionDuration = initialTransitionDuration
-#        self.controls = dict()
+
+        for fixture, parameters in enumerate(fixtureList):
+            self.fixtureList[fixture] = parameters
+        
+        for group, parameters in enumerate(groupList):
+            self.groupList[group] = parameters
+        
+        for effect, parameters in enumerate(effectList):
+            self.effectList[effect] = parameters
 
 #        self.configure()
 
