@@ -36,30 +36,36 @@
         "cueName1": {
             "fixtureList": {
 # fixtureName: {"value":[v1, v2, v3, v4], "transitionTime":time_in_seconds, "FX":{fixtureEffect1:{parameter1:value, parameter2:value}, fixtureEffect2{parameter1:value, parameter2:value}} }
-                  "rgbw1": {"value":[10, 20, 150], "transitionTime":2, "FX":{"blinkFixture":{"timeON":25, "timeOFF":10} } },
-                  "rgbw2": {"value":[120, 200, 50], "transitionTime":2, "FX":{} },
-                  "slimpar_4": {"value":[30, 40, 12], "transitionTime":2, "FX":{} }
+                  "rgbw1": {"setColor":"#22F35515", "FX":{"blinkFixture":{"timeON":25, "timeOFF":10} } },
+                  "rgbw2": {"setColor":"#EEBBAA", "setIntensity":103,"FX":{} },
+                  "rgbw5": {"setColor":"#12345678", "FX":{} }
             },
             "groupList": {
 # groupName: {"value":[v1, v2, v3, v4], "transitionTime":time_in_seconds, "FX":{groupEffect1{parameter1:value, parameter2:value}, groupEffect2{parameter1:value, parameter2:value}} }
-                  "odds": {"value":[10, 150, 150], "transitionTime":2, "FX":{} }
-            }
+                  "odds": {"setColor":"#EEBBAA", "FX":{} }
+            },
+            "effectList": {},
+            "initialTransitionDuration": 5
         },
         "cueName2": {
             "fixtureList": {
             },
             "groupList": {
-                  "odds": {"value":[10, 150, 150], "transitionTime":2, "FX":{} },
-                  "evens": {"value":[150, 15, 250], "transitionTime":2, "FX":{"blinkGroup":{"timeON":0.5, "timeOFF":1} } }
+                  "odds": {"setColor":"#22F35515", "setIntensity":44,"FX":{} },
+                  "evens": {"setColor":"#EEBBAA", "FX":{"blinkGroup":{"timeON":0.5, "timeOFF":1} } }
             },
+            "effectList": {},
+            "initialTransitionDuration": 8
         },
         "cueName3": {
             "fixtureList": {
-                  "rgbw3": {"value":[10, 20, 150], "transitionTime":2, "FX":{} },
-                  "dimmer4": {"value":[120, 200, 50], "transitionTime":2, "FX":{} }
+                  "rgbw3": {"setColor":"#22F35515", "setIntensity":133,"FX":{} },
+                  "dimmer4": {"setIntensity":231, "FX":{} }
             },
             "groupList": {
-            }
+            },
+            "effectList": {},
+            "initialTransitionDuration": 3
         }
     },
 
