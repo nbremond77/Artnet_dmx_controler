@@ -14,11 +14,24 @@ To activate a specific settings for the application, run:
     OR export APP_SETTINGS="config.TestingConfig"
 """
 
+# Run in development mode... for now
+import os
+import config
 from flask import Flask, url_for
 from flask import render_template, request,  flash,  redirect
-import os
 import time
 import logging
+os.system('export APP_SETTINGS="config.DevelopmentConfig"')
+# Create the application
+app = Flask(__name__)
+
+
+# Load app configuration
+#app.config.from_object(os.environ['APP_SETTINGS'])
+app.config.from_object(config.DevelopmentConfig)
+#app.config.from_object(config.ProductionConfig)
+
+
 
 from artnet import dmx_rig
 from artnet import dmx_fixture
@@ -72,6 +85,8 @@ g1 = myRig.groups['odds']
 g2 = myRig.groups['evens']
 g3 = myRig.groups['dimmers']
 
+c1 = myRig.cues['cueName1']
+c1.getFrame()
 
 log.info("Running script %s" % __name__)
 # global g
@@ -88,17 +103,8 @@ q = dmx_controller.Controller(address, bpm=30, fps=20,  timeout=TIMEOUT,  nodaem
     
     
     
-# Create the application
-app = Flask(__name__)
 
-# Run in development mode... for now
-os.system('export APP_SETTINGS="config.DevelopmentConfig"')
-import config
 
-# Load app configuration
-#app.config.from_object(os.environ['APP_SETTINGS'])
-app.config.from_object(config.DevelopmentConfig)
-#app.config.from_object(config.ProductionConfig)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -239,21 +245,21 @@ if __name__ == '__main__':
     }
     """
 
-    cueName = 'myCue1'
-    fixtureList = {
-        'slimpar_1': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}, 
-        'slimpar_2': {'setColor': '#FE1233', 'setIntensity':200}, 
-        'slimpar_4': {'setIntensity':200}
-        }
-    groupList = {
-        'odds': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}
-        }
+#    cueName = 'myCue1'
+#    fixtureList = {
+#        'slimpar_1': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}, 
+#        'slimpar_2': {'setColor': '#FE1233', 'setIntensity':200}, 
+#        'slimpar_4': {'setIntensity':200}
+#        }
+#    groupList = {
+#        'odds': {'setColor': '#FE1233BB', 'setStrobe':12, 'setIntensity':200}
+#        }
 #    myCue1 = Cue(cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0)
-    myCue1 = dmx_cue.Cue(cueName, fixtureList,  groupList,  {}, initialTransitionDuration = 2)
-    print(myCue1)
+#    myCue1 = dmx_cue.Cue(cueName, fixtureList,  groupList,  {}, initialTransitionDuration = 2)
+#    print(myCue1)
     
-    myFrame = myCue1.getFrame()
-    print(myFrame)
+#    myFrame = myCue1.getFrame()
+#    print(myFrame)
 
 
 #    q.run()
