@@ -60,31 +60,58 @@ class Rig():
             ])
     
         # decode Cues
-        for name, cue in self.rig_data['cues'].items():
+        for cueName, cue in self.rig_data['cues'].items():
             log.debug("Cue: %s" % name)
             log.debug(cue)
             
-            cueName = cue[0]
-            fixtureList = [ self.fixtures[g[1]] for g in cue]
-            groupList = [ self.groups[g[2]] for g in cue]
-            effectList = {}
-            initialTransitionDuration = cue[4]
-            # Cue(cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0)
-            # A DEBOGGUER !!!
-            self.cues[name] = dmx_cue.Cue( cueName, fixtureList, groupList, effectList, initialTransitionDuration)
-
+            theFixtureList = {}
+            theGroupList = {}
+            theEffectList = {}
             
+            for index,  fixtureName in enumerate(cue['fixtureList']):
+                parameter = cue['fixtureList'][fixtureName]
+                theFixtureList[self.fixtures[fixtureName]] = parameter
+            for index,  groupName in enumerate(cue['groupList']):
+                parameter = cue['groupList'][groupName]
+                theGroupList[groupName] = parameter
+            for index,  effectName in enumerate(cue['effectList']):
+                parameter = cue['effectList'][effectName]
+                theEffectList[effectName] = parameter
+    
+            initialTransitionDuration = cue['initialTransitionDuration']
+            self.cues[cueName] = dmx_cue.Cue( cueName, theFixtureList, theGroupList, theEffectList, initialTransitionDuration)
+
+#"chaseName1": [
+#    { "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop},
+#    { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue"},
+#    { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue"},
+#    { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop"}
+#],
+
         
         # decode Chases
-        for name, chase in self.rig_data['chases'].items():
-            log.debug("Chase: %s" % name)
+        for chaseName, chase in self.rig_data['chases'].items():
+            log.debug("Chase: %s TO BE DONE" % name)
             log.debug(chase)
-        
-        # decode Shows
-        for name, show in self.rig_data['shows'].items():
-            log.debug("Show: %s" % name)
-            log.debug(show)
+           
+#            theChaseList = []
+            
+#            for theList in chase:
+#                cueList = theList['cueList']
+#                duration = theList['duration']
+#                nextAction = theList['nextAction']
+#                theChaseList[self.fixtures[cueName]] = parameter  
 
+#                theChaseList.append(theList)
+            
+            self.chases[chaseName] = dmx_chase.Chase(chaseName, chase)
+
+        # decode Shows
+        for showName, show in self.rig_data['shows'].items():
+            log.debug("Show: %s TO BE DONE" % name)
+            log.debug(show)
+            self.shows[showName] = dmx_show.Show(showName, show)
+            
     def printRig(self):
         print("*** RIG %s ***" % self.name)
 
