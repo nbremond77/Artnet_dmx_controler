@@ -63,6 +63,17 @@ class Rig():
         for name, cue in self.rig_data['cues'].items():
             log.debug("Cue: %s" % name)
             log.debug(cue)
+            
+            cueName = cue[0]
+            fixtureList = [ self.fixtures[g[1]] for g in cue]
+            groupList = [ self.groups[g[2]] for g in cue]
+            effectList = {}
+            initialTransitionDuration = cue[4]
+            # Cue(cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0)
+            # A DEBOGGUER !!!
+            self.cues[name] = dmx_cue.Cue( cueName, fixtureList, groupList, effectList, initialTransitionDuration)
+
+            
         
         # decode Chases
         for name, chase in self.rig_data['chases'].items():

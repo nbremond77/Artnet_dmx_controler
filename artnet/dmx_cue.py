@@ -25,7 +25,7 @@
 """
 
 import time,  logging
-from artnet import dmx_frame, dmx_fixture, dmx_effects
+from artnet import dmx_frame, dmx_fixture, dmx_effects, dmx_rig
 
 logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -33,32 +33,35 @@ log = logging.getLogger(__name__)
 class Cue(object):
     def __init__(self, cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0):
  
-        fixtureList  = {}
-        groupList = {}
-        effectList = {}
+        cueFixtureList  = {}
+        cueGroupList = {}
+        cueEffectList = {}
  
         self.name = cueName
         self.initialTransitionDuration = initialTransitionDuration
 
         for fixture, parameters in enumerate(fixtureList):
-            self.fixtureList[fixture] = parameters
+            self.cueFixtureList[fixture] = parameters
         
         for group, parameters in enumerate(groupList):
-            self.groupList[group] = parameters
+            self.cueGroupList[group] = parameters
         
         for effect, parameters in enumerate(effectList):
-            self.effectList[effect] = parameters
+            self.cueEffectList[effect] = parameters
 
 #        self.configure()
 
 
     def update(self,  fixtureList=None,  groupList=None,  effectList = None, initialTransitionDuration = None):
         if fixtureList:
-            self.fixtureList = fixtureList
+            for fixture, parameters in enumerate(fixtureList):
+                self.cueFixtureList[fixture] = parameters
         if groupList:
-            self.groupList = groupList
+            for group, parameters in enumerate(groupList):
+                self.cueGroupList[group] = parameters
         if effectList:
-            self.effectList = effectList
+            for effect, parameters in enumerate(effectList):
+                self.cueEffectList[effect] = parameters
         if initialTransitionDuration:
             self.initialTransitionDuration = initialTransitionDuration
 
@@ -70,9 +73,9 @@ class Cue(object):
         theFrame = dmx_frame.Frame()
         
         # Set the values of the fixture
-        for fixtureName, actions in self.fixtureList.items():
+        for fixtureName, parameter in self.cueFixtureList.items():
             log.debug("Cue: %s Fixture: %s" % (self.name, fixtureName))
-            for actionCommand, actionValue in actions.items():
+            for actionCommand, actionValue in parameter.items():
                 log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 fixtureName.actionCommand(actionValue)
             
@@ -80,9 +83,9 @@ class Cue(object):
             theFrame.merge(fixtureName.getFrame())
             
         # Set the values of the group
-        for groupName, actions in self.groupList.items():
-            log.debug("Cue: %s Group: %s" % (self.cueName, groupName))
-            for actionCommand, actionValue in actions.items():
+        for groupName, parameter in self.cueGroupList.items():
+            log.debug("Cue: %s Group: %s" % (self.name, groupName))
+            for actionCommand, actionValue in parameter.items():
                 log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 groupName.actionCommand(actionValue)
 
