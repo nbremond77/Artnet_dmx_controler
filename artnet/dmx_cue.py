@@ -7,8 +7,8 @@ from artnet import shared
 #log = logging.getLogger(__name__)
 
 class Cue(object):
-    def __init__(self, cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0):
- 
+    def __init__(self, rig,  cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0):
+        self.rig = rig
         self.cueFixtureList  = {}
         self.cueGroupList = {}
         self.cueEffectList = {}
@@ -52,9 +52,9 @@ class Cue(object):
         
         # Set the values of the fixture
         for fixture, parameter in self.cueFixtureList.items():
-            log.debug("Cue: %s Fixture: %s" % (self.name, fixture))
+            shared.log.debug("Cue: %s Fixture: %s" % (self.name, fixture))
             for actionCommand, actionValue in parameter.items():
-                #log.debug(" - action: %s - %s" % (actionCommand, actionValue))
+                #shared.log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 fixture.setCommand(actionCommand, actionValue)
                 
             # Merge this values in the current frame
@@ -62,12 +62,13 @@ class Cue(object):
             
         # Set the values of the group
         for group, parameter in self.cueGroupList.items():
-            log.debug("Cue: %s Group: %s" % (self.name, group))
+            shared.log.debug("Cue: %s Group: %s" % (self.name, group))
             for actionCommand, actionValue in parameter.items():
-                group.setCommand(actionCommand, actionValue)
+                for fixture in self.rig.groups[group]:
+                    fixture.setCommand(actionCommand, actionValue)
                 
             # Merge this values in the current frame
-            theFrame.merge(group.getFrame())
+            theFrame.merge(self.rig.groups[group].getFrame())
 
         # Set the values of the effect
 # TO BE DONE

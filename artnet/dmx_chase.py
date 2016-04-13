@@ -25,9 +25,9 @@ class Chase():
 
         # Set the values of the fixture
         for fixtureName, parameter in self.cueFixtureList.items():
-            log.debug("Cue: %s Fixture: %s" % (self.name, fixtureName))
+            shared.log.debug("Cue: %s Fixture: %s" % (self.name, fixtureName))
             for actionCommand, actionValue in parameter.items():
-                log.debug(" - action: %s - %s" % (actionCommand, actionValue))
+                shared.log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 fixtureName.actionCommand(actionValue)
             
             # Merge this values in the current frame
@@ -35,9 +35,9 @@ class Chase():
             
         # Set the values of the group
         for groupName, parameter in self.cueGroupList.items():
-            log.debug("Cue: %s Group: %s" % (self.name, groupName))
+            shared.log.debug("Cue: %s Group: %s" % (self.name, groupName))
             for actionCommand, actionValue in parameter.items():
-                log.debug(" - action: %s - %s" % (actionCommand, actionValue))
+                shared.log.debug(" - action: %s - %s" % (actionCommand, actionValue))
                 groupName.actionCommand(actionValue)
 
             # Merge this values in the current frame

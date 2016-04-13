@@ -51,7 +51,7 @@ class Controller(dmx_deamon.Poller):
             self.access_lock.acquire()
             if(self.running):
                 self.running = False
-                log.debug("Stop...")
+                shared.log.debug("Stop...")
         finally:
             self.access_lock.release()
     
@@ -61,10 +61,10 @@ class Controller(dmx_deamon.Poller):
             self.access_lock.acquire()
             if(self.autocycle.enabled):
                 self.generators.append(itertools.cycle(generator))
-                log.debug("Add cyclic generator: %s" % generator)
+                shared.log.debug("Add cyclic generator: %s" % generator)
             else:
                 self.generators.append(generator)
-                log.debug("Add cyclic generator: %s" % generator)
+                shared.log.debug("Add cyclic generator: %s" % generator)
         finally:
             self.access_lock.release()
     
@@ -106,7 +106,7 @@ class Controller(dmx_deamon.Poller):
         self.running = True
         now = time.time()
         self.startTime = now
-        log.debug("Start run...")
+        shared.log.debug("Start run...")
         while(self.running):
             drift = now - time.time()
             
@@ -128,7 +128,7 @@ class Controller(dmx_deamon.Poller):
             if(excess > 0):
                 time.sleep(excess - drift if self.running else 0)
             else:
-                log.warning("Frame rate loss; generators took %sms too long" % round(abs(excess * 1000)))
+                shared.log.warning("Frame rate loss; generators took %sms too long" % round(abs(excess * 1000)))
             now = time.time()
-            log.debug("Run...")
+            shared.log.debug("Run...")
 

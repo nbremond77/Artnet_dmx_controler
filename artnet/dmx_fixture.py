@@ -66,9 +66,9 @@ class FixtureGroup(list):
             return results
         return _dispatch
     
-    def setCommand(self, actionCommand, actionValue)
+    def setCommand(self, actionCommand, actionValue):
         for fixture in self:
-            log.debug("Group - set fixture %s to action: %s - %s" % (fixture, actionCommand, actionValue))
+            shared.log.debug("Group - set fixture %s to action: %s - %s" % (fixture, actionCommand, actionValue))
             fixture.setCommand(actionCommand, actionValue)
 
     
@@ -80,7 +80,7 @@ class FixtureGroup(list):
                     continue
                 frame[(f.address - 1) + offset] = value
 
-        log.debug("getFrame: %s" % frame[0:30])            
+        shared.log.debug("getFrame: %s" % frame[0:30])            
         
         return frame
 
@@ -111,32 +111,38 @@ class Fixture(object):
                 ctrl = RGBControl()
                 label = ctrl.configure(fixturedef)
                 self.addControl(label, ctrl)
+                self.capabilities.append("setColor")
 
         if "rgbw_offsets" in fixturedef:
                 ctrl = RGBWControl()
                 label = ctrl.configure(fixturedef)
                 self.addControl(label, ctrl)
+                self.capabilities.append("setColor")
         
         if "xy_offsets" in fixturedef:
                 ctrl = XYControl()
                 label = ctrl.configure(fixturedef)
                 self.addControl(label, ctrl)
+                self.capabilities.append("setPosition")
 
         if "strobe_offset" in fixturedef:
                 ctrl = StrobeControl()
                 label = ctrl.configure(fixturedef)
                 self.addControl(label, ctrl)
+                self.capabilities.append("setStrobe")
 
         if "intensity_offset" in fixturedef:
                 ctrl = IntensityControl()
                 label = ctrl.configure(fixturedef)
                 self.addControl(label, ctrl)
+                self.capabilities.append("setIntensity")
 
         if "program_channels" in fixturedef:
                 for channel in fixturedef.get('program_channels', []):
                     ctrl = ProgramControl()
                     label = ctrl.configure(channel, fixturedef)
                     self.addControl(label, ctrl)
+                self.capabilities.append("setMacro")
 
 
     def hasCapability(self, capability):
@@ -153,10 +159,10 @@ class Fixture(object):
 #        for clist in titi:
 #            for c in clist[1]:
 #                for x in c.getState():
-#                    log.debug(x)
+#                    shared.log.debug(x)
 #        return [x for clist in sorted(self.controls.items(), prg_cmp) for c in clist[1] for x in c.getState()]
         tmp = [x for clist in (self.controls.items()) for c in clist[1] for x in c.getState()]
-        log.debug("getState: %s" % tmp)
+        shared.log.debug("getState: %s" % tmp)
         return tmp
     
     def getFrame(self):
@@ -166,7 +172,7 @@ class Fixture(object):
                 continue
             frame[(self.address - 1) + offset] = value
             
-        log.debug("getFrame: %s" % frame[0:30])            
+        shared.log.debug("getFrame: %s" % frame[0:30])            
         return frame
     
     def triggerMacro(self, macro_type, macro, speed=None):
@@ -177,21 +183,21 @@ class Fixture(object):
                 if(ctrl.macro_type == macro_type and ctrl.hasMacro(macro)):
                     ctrl.triggerMacro(macro, speed=speed)
 
-    def setCommand(self, actionCommand, actionValue)
-        log.debug("Fixture %s run action: %s - %s" % (self, actionCommand, actionValue))
+    def setCommand(self, actionCommand, actionValue):
+        shared.log.debug("Fixture %s run action: %s - %s" % (self, actionCommand, actionValue))
         if (actionCommand == "setIntensity"):
             if self.hasCapability('setIntensity'):
                 self.setIntensity(actionValue)
-        else if (actionCommand == "setColor"):
+        elif (actionCommand == "setColor"):
             if self.hasCapability('setColor'):
                 self.setColor(actionValue)
-        else if (actionCommand == "setStrobe"):
+        elif (actionCommand == "setStrobe"):
             if self.hasCapability('setStrobe'):
                 self.setStrobe(actionValue)
-        else if (actionCommand == "setMacro"):
+        elif (actionCommand == "setMacro"):
             if self.hasCapability('setMacro'):
                 self.setMacro(actionValue)
-        else if (actionCommand == "setPosition"):
+        elif (actionCommand == "setPosition"):
             if self.hasCapability('setPosition'):
                 self.setPosition(actionValue)
                     
@@ -208,7 +214,7 @@ class RGBControl(object):
         self.red_offset = fixturedef['rgb_offsets']['red']
         self.green_offset = fixturedef['rgb_offsets']['green']
         self.blue_offset = fixturedef['rgb_offsets']['blue']
-        self.capabilities.append("setColor")
+#        self.capabilities.append("setColor")
         return 'rgb'
     
     def setColor(self, hexcode):
@@ -250,7 +256,7 @@ class RGBWControl(object):
         self.green_offset = fixturedef['rgbw_offsets']['green']
         self.blue_offset = fixturedef['rgbw_offsets']['blue']
         self.white_offset = fixturedef['rgbw_offsets']['white']
-        self.capabilities.append("setColor")
+#        self.capabilities.append("setColor")
         return 'rgbw'
     
     def setColor(self, hexcode):
@@ -260,7 +266,7 @@ class RGBWControl(object):
         self.green_level = g
         self.blue_level = b
         self.white_level = w
-        log.debug("SetColor RGBW: (r:%s, b:%s, g:%s, w:%s)" % (r, b, g,  w))
+        shared.log.debug("SetColor RGBW: (r:%s, b:%s, g:%s, w:%s)" % (r, b, g,  w))
     
     def getColor(self):
         # for some reason this is out of order
@@ -313,7 +319,7 @@ class XYControl(object):
         if(self.has_fine_control):
             self.xfine_offset = fixturedef['xy_offsets']['xfine']
             self.yfine_offset = fixturedef['xy_offsets']['yfine']
-        self.capabilities.append("setPosition")
+#        self.capabilities.append("setPosition")
         return 'xy'
     
     def getState(self):
@@ -333,7 +339,7 @@ class StrobeControl(object):
     
     def configure(self, fixturedef):
         self.strobe_offset = fixturedef['strobe_offset']
-        self.capabilities.append("setStrobe")
+#        self.capabilities.append("setStrobe")
         return 'strobe'
     
     def setStrobe(self, value):
@@ -377,7 +383,7 @@ class ProgramControl(object):
                 self.setMacro(label, conf, None)
             else:
                 self.setMacro(label, conf['value'], conf['speed'])
-        self.capabilities.append("setMacro")
+#        self.capabilities.append("setMacro")
         return 'program'
     
     def getState(self):
@@ -398,12 +404,12 @@ class IntensityControl(object):
     def configure(self, fixturedef):
         self.intensity_offset = fixturedef['intensity_offset']
         self.intensityfine_offset = fixturedef.get('intensityfine_offset', None)
-        self.capabilities.append("setIntensity")
+#        self.capabilities.append("setIntensity")
         return 'intensity'
     
     def setIntensity(self, value):
         self.intensity_value = value
-        log.debug("SetIntensity: %s" % self.intensity_value)
+        shared.log.debug("SetIntensity: %s" % self.intensity_value)
     
     def getIntensity(self):
         return self.intensity_value

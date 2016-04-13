@@ -83,13 +83,13 @@ class ArtNetPacket(object):
         
 #        fmt = ', '.join(['='.join([f,n]) for n,f,v in fields])
 #        data = dict([(n,v) for n,f,v in fields])
-#        log.debug(" data= %s" % data)
-#        log.debug(" fmt = '%s'" % fmt)
-#        log.debug("toto = bitstring.pack(fmt, **data)")
+#        shared.log.debug(" data= %s" % data)
+#        shared.log.debug(" fmt = '%s'" % fmt)
+#        shared.log.debug("toto = bitstring.pack(fmt, **data)")
 #        pack = bitstring.pack(fmt, **data)
-#        log.debug("DEBUG -- bitstring.pack(fmt, **data): %s" % pack)
+#        shared.log.debug("DEBUG -- bitstring.pack(fmt, **data): %s" % pack)
 #        pack_byte = pack.tobytes()
-#        log.debug("DEBUG -- pack_byte: %s" % pack_byte)
+#        shared.log.debug("DEBUG -- pack_byte: %s" % pack_byte)
 #        return bitstring.pack(fmt, **data).tobytes() # ATTENTION BUG POSSIBLE : Sorting has been removed during migration to python 3
         
         fmt = ', '.join(['='.join([f,n]) for n,f,v in fields])
@@ -123,11 +123,11 @@ class DmxPacket(ArtNetPacket):
     
     def format_framedata(self):
 #        tmp = ''.join([chr(i or 0) for i in self.frame])
-#        log.debug(len(tmp))
+#        shared.log.debug(len(tmp))
 #        tmp = tmp[0:512]
-#        log.debug(len(tmp))
+#        shared.log.debug(len(tmp))
 #        tmp2 = str.encode(tmp)
-#        log.debug(len(tmp2))
+#        shared.log.debug(len(tmp2))
 #        return (tmp2[0:512]) # ATTENTION BUG POSSIBLE !!! The [0:512] has been added for migration to python 3. Is the end of the frame missing ?
         # return ''.join([chr(i or 0) for i in self.frame])
         tmp = bytearray()

@@ -41,29 +41,29 @@ class Rig():
         with open(config_path, 'r') as f:
             self.rig_data = yaml.safe_load(f)
             
-        log.debug(self.rig_data)
+        shared.log.debug(self.rig_data)
         
         # Rig global parameters
         self.name = self.rig_data['name']
         
         # decode Fixtures
         for name, theFixture in self.rig_data['fixtures'].items():
-            log.debug("Fixture: %s" % name)
-            log.debug(theFixture)
+            shared.log.debug("Fixture: %s" % name)
+            shared.log.debug(theFixture)
             self.fixtures[name] = dmx_fixture.Fixture.create(theFixture['address'], theFixture['config'])
 
         # Decode groups
         for name, group in self.rig_data['groups'].items():
-            log.debug("Group: %s" % name)
-            log.debug(group)
+            shared.log.debug("Group: %s" % name)
+            shared.log.debug(group)
             self.groups[name] = dmx_fixture.FixtureGroup([
                 self.fixtures[g] for g in group
             ])
     
         # decode Cues
         for cueName, cue in self.rig_data['cues'].items():
-            log.debug("Cue: %s" % name)
-            log.debug(cue)
+            shared.log.debug("Cue: %s" % name)
+            shared.log.debug(cue)
             
             theFixtureList = {}
             theGroupList = {}
@@ -80,7 +80,7 @@ class Rig():
                 theEffectList[effectName] = parameter
     
             initialTransitionDuration = cue['initialTransitionDuration']
-            self.cues[cueName] = dmx_cue.Cue( cueName, theFixtureList, theGroupList, theEffectList, initialTransitionDuration)
+            self.cues[cueName] = dmx_cue.Cue( self,  cueName, theFixtureList, theGroupList, theEffectList, initialTransitionDuration)
 
 #"chaseName1": [
 #    { "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop},
@@ -92,8 +92,8 @@ class Rig():
         
         # decode Chases
         for chaseName, chase in self.rig_data['chases'].items():
-            log.debug("Chase: %s TO BE DONE" % name)
-            log.debug(chase)
+            shared.log.debug("Chase: %s TO BE DONE" % name)
+            shared.log.debug(chase)
            
 #            theChaseList = []
             
@@ -109,8 +109,8 @@ class Rig():
 
         # decode Shows
         for showName, show in self.rig_data['shows'].items():
-            log.debug("Show: %s TO BE DONE" % name)
-            log.debug(show)
+            shared.log.debug("Show: %s TO BE DONE" % name)
+            shared.log.debug(show)
             self.shows[showName] = dmx_show.Show(showName, show)
             
     def printRig(self):

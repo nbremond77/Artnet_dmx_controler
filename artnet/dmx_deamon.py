@@ -19,7 +19,7 @@ from artnet import shared
 #log = logging.getLogger(__name__)
 
 #def main(config):
-#    log.info("Running script %s" % __name__)
+#    shared.log.info("Running script %s" % __name__)
 #    d = Poller(config.get('base', 'address'))
 #    d.run()
 
@@ -64,14 +64,14 @@ class Poller(threading.Thread):
         if(p is None):
             return
         
-        log.debug("recv: %s" % p)
+        shared.log.debug("recv: %s" % p)
         if(p.opcode == dmx_definitions.OPCODES['OpPoll']):
             self.send_poll_reply(p)
     
     def send_dmx(self, frame, universe=0):
         p = dmx_packet.DmxPacket(frame, universe=universe)
         self.sock.sendto(p.encode(), (self.address, dmx_definitions.STANDARD_PORT))
-        log.debug("Send DMX: %s" % p)
+        shared.log.debug("Send DMX: %s" % p)
     
     def send_poll(self):
         p = dmx_packet.PollPacket(address=self.broadcast_address)
@@ -84,6 +84,6 @@ class Poller(threading.Thread):
         r = dmx_packet.PollReplyPacket(address=self.broadcast_address)
         r.style = style
         
-        log.debug("send: %s" % r)
+        shared.log.debug("send: %s" % r)
         self.sock.sendto(r.encode(), (r.address, dmx_definitions.STANDARD_PORT))
 

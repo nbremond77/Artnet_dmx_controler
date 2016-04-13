@@ -9,14 +9,14 @@ from artnet import shared
 #log = logging.getLogger(__name__)
 
 
-        "chaseName1": [
-            #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|StartLoop|Loop, ["loopCount": 10], "initialTransitionDuration": time_in_seconds},
-            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
-            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 1},
-            { "cueList": {"cueName2"}, "duration": 1, "nextAction":"StartLoop", "initialTransitionDuration": 0}
-            { "cueList": {"cueName3"}, "duration": 1, "nextAction":"Loop", "loopCount": 10, "initialTransitionDuration": 0}
-            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
-        ],
+#        "chaseName1": [
+#            #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|StartLoop|Loop, ["loopCount": 10], #"initialTransitionDuration": time_in_seconds},
+#            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
+#            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 1},
+#            { "cueList": {"cueName2"}, "duration": 1, "nextAction":"StartLoop", "initialTransitionDuration": 0}
+#            { "cueList": {"cueName3"}, "duration": 1, "nextAction":"Loop", "loopCount": 10, "initialTransitionDuration": 0}
+#            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
+#        ],
         
         
 def create_chaseRun(clock, chase, fps=20):
@@ -46,20 +46,20 @@ def create_chaseRun(clock, chase, fps=20):
         
         startFrame = endFrame
 
-        if cues['nextAction']=="Continue":
-            cueIndex++
-        else if cues['nextAction']=="Stop":
+        if (cues['nextAction']=="Continue"):
+            cueIndex = cueIndex + 1
+        elif cues['nextAction']=="Stop":
             cueIndex = len(chase) # End of cue list
-        else if cues['nextAction']=="StartLoop":
+        elif cues['nextAction']=="StartLoop":
             indexStartLoop = cueIndex
             loopExecutionCounter = 0
-            cueIndex++
-        else if cues['nextAction']=="Loop":
-            if loopExecutionCounter < cues['loopCount']
+            cueIndex = cueIndex + 1
+        elif cues['nextAction']=="Loop":
+            if loopExecutionCounter < cues['loopCount']:
                 cueIndex = indexStartLoop
-                loopExecutionCounter++
+                loopExecutionCounter = loopExecutionCounter + 1
             else:
-                cueIndex++
+                cueIndex = cueIndex + 1
         
     return iter(result)
     
