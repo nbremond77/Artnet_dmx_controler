@@ -35,21 +35,18 @@
     "cues": {
         "cueName1": {
             "fixtureList": {
-# fixtureName: {"value":[v1, v2, v3, v4], "transitionTime":time_in_seconds, "FX":{fixtureEffect1:{parameter1:value, parameter2:value}, fixtureEffect2{parameter1:value, parameter2:value}} }
                   "rgbw1": {"setColor":"#22F35515", "FX":{"blinkFixture":{"timeON":25, "timeOFF":10} } },
                   "rgbw2": {"setColor":"#EEBBAA", "setIntensity":103,"FX":{} },
                   "rgbw5": {"setColor":"#12345678", "FX":{} }
             },
             "groupList": {
-# groupName: {"value":[v1, v2, v3, v4], "transitionTime":time_in_seconds, "FX":{groupEffect1{parameter1:value, parameter2:value}, groupEffect2{parameter1:value, parameter2:value}} }
                   "odds": {"setColor":"#EEBBAA", "FX":{} }
             },
             "effectList": {},
             "initialTransitionDuration": 5
         },
         "cueName2": {
-            "fixtureList": {
-            },
+            "fixtureList": {},
             "groupList": {
                   "odds": {"setColor":"#22F35515", "setIntensity":44,"FX":{} },
                   "evens": {"setColor":"#EEBBAA", "FX":{"blinkGroup":{"timeON":0.5, "timeOFF":1} } }
@@ -62,8 +59,7 @@
                   "rgbw3": {"setColor":"#22F35515", "setIntensity":133,"FX":{} },
                   "dimmer4": {"setIntensity":231, "FX":{} }
             },
-            "groupList": {
-            },
+            "groupList": {},
             "effectList": {},
             "initialTransitionDuration": 3
         }
@@ -71,15 +67,15 @@
 
     "chases": {
         "chaseName1": [
-            #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop},
-            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue"},
-            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue"},
-            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop"}
+            #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop, "initialTransitionDuration": time_in_seconds},
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 1},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop", "initialTransitionDuration": 0}
         ],
         "chaseName2": [
-            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue"},
-            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue"},
-            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop"}
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
         ]
     },
     
