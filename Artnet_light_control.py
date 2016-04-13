@@ -21,6 +21,12 @@ from flask import Flask, url_for
 from flask import render_template, request,  flash,  redirect
 import time
 import logging
+
+from artnet import shared
+#logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
+#log = logging.getLogger(__name__)
+
+
 os.system('export APP_SETTINGS="config.DevelopmentConfig"')
 # Create the application
 app = Flask(__name__)
@@ -46,8 +52,6 @@ from artnet import dmx_effects
 
 
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
-log = logging.getLogger(__name__)
 
 frameList=[]
 aFrame = dict(name='Douche_simple',  image='static/douche1.jpg',  page=1)
