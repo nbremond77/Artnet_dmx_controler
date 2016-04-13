@@ -34,8 +34,8 @@ app = Flask(__name__)
 
 # Load app configuration
 #app.config.from_object(os.environ['APP_SETTINGS'])
-app.config.from_object(config.DevelopmentConfig)
-#app.config.from_object(config.ProductionConfig)
+#app.config.from_object(config.DevelopmentConfig)
+app.config.from_object(config.ProductionConfig)
 
 
 
@@ -84,22 +84,15 @@ myRig = dmx_rig.Rig()
 myRig.load("/home/nbremond/myCloud/Projets_NBR/Electronique/ArtNet DMX Controller/Artnet_dmx_controler/rigs/my-rig_2.yaml")
 myRig.printRig()
 
-g = myRig.groups['all']
-g1 = myRig.groups['odds']
-g2 = myRig.groups['evens']
-g3 = myRig.groups['dimmers']
 
-c1 = myRig.cues['cueName1']
-c1.getFrame()
-
-log.info("Running script %s" % __name__)
+shared.log.info("Running script %s" % __name__)
 # global g
 # g = get_default_fixture_group(config)
 #    q = controller or dmx_controller.Controller(config.get('base', 'address'), bpm=60, nodaemon=True, runout=True)
 address = "192.168.0.82"
 #    address = ""
 
-log.debug("Configure DMX controller")
+shared.log.debug("Configure DMX controller")
 
 #    q = dmx_controller.Controller(address, bpm=30, fps=20,  nodaemon=True, runout=False,  universe=1)
 q = dmx_controller.Controller(address, bpm=30, fps=20,  timeout=TIMEOUT,  nodaemon=True, runout=False,  universe=1)
@@ -113,25 +106,25 @@ q = dmx_controller.Controller(address, bpm=30, fps=20,  timeout=TIMEOUT,  nodaem
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #log.debug(frameList)
+    #shared.log.debug(frameList)
     return render_template('layout_1.html',  buttonList=frameList,  imageList=imageList,  page=currentPage)
 
 
 @app.route('/sceneButton', methods = ['POST'])
 def sceneButton():
-    log.debug("POST - Frame1")
+    shared.log.debug("POST - Frame1")
     frameName = request.form['Frame']
-    log.debug(frameName)
+    shared.log.debug(frameName)
     for i in frameList:
         #print(i)
         #print(i['name'])
         if (i['name'] == frameName):
             currentFrame = i
-            log.debug('-->FOUND: %s - %s' % (frameName,  currentFrame))
+            shared.log.debug('-->FOUND: %s - %s' % (frameName,  currentFrame))
 
 
             
-            log.debug("add effect 2")
+            shared.log.debug("add effect 2")
             q.removeAll()
             q.add(dmx_effects.create_frameListRun(q.get_clock(), frames=[
                 all_gray(g3),  
@@ -143,17 +136,17 @@ def sceneButton():
 
     
             print("Run 1st effect")
-            log.info("Run 1st effect")
+            shared.log.info("Run 1st effect")
 
             break
-    #log.debug(currentFrame)
+    #shared.log.debug(currentFrame)
     return redirect('/')
 
 @app.route('/nextPage', methods = ['GET'])
 def nextPage():
     global currentPage
     currentPage = min(currentPage+1,  MAX_PAGES)
-    log.debug("GET - next - %s" %  currentPage)
+    shared.log.debug("GET - next - %s" %  currentPage)
 
     q.removeAll()
     q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*10, totalDuration=30.0)) # Color
@@ -163,7 +156,7 @@ def nextPage():
 def previousPage():
     global currentPage
     currentPage = max(currentPage-1,  1)
-    log.debug("GET - previous - %s" %  currentPage)
+    shared.log.debug("GET - previous - %s" %  currentPage)
 
     q.removeAll()
     q.add(dmx_effects.create_multifade([all_red(g1),  all_blue(g1)]*10, totalDuration=30.0)) # Color
@@ -171,7 +164,7 @@ def previousPage():
 
 @app.route('/setupPage')
 def setupPage():
-    log.debug("add effect 1")
+    shared.log.debug("add effect 1")
 #    q.add(dmx_effects.create_multifade([
 #        all_red(g1),
 #        all_blue(g1),
@@ -273,7 +266,7 @@ if __name__ == '__main__':
 
 #    q.add(dmx_effects.create_multiframe([all_gray(g3),  all_white(g3)]*3, totalDuration=10.0)) # Dimmer
 #    print("Run 2nd effect")
-#    log.info("Run 2nd effect")
+#    shared.log.info("Run 2nd effect")
 #    q.run()
     
 
@@ -285,10 +278,10 @@ if __name__ == '__main__':
 #    q2 = dmx_controller.Controller(address, bpm=30, fps=20,  nodaemon=True, runout=False,  universe=1)
 #    q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*60, totalDuration=60.0)) # Color
 #    print("Start DMX controller with other effect")
-    log.info("Start DMX controller with other effect")
+    shared.log.info("Start DMX controller with other effect")
     q.start()
 
-    log.debug("Continue initialization")
+    shared.log.debug("Continue initialization")
 
 
 #    time.sleep(5)
@@ -299,10 +292,10 @@ if __name__ == '__main__':
     
     # Run the web server on port 5000
     print("Run the web server on port 5000")
-    log.debug("Run the web server on port 5000")
+    shared.log.debug("Run the web server on port 5000")
     app.run('0.0.0.0')
     
     # stop the DMX thread
 #    myDMXthread.stop()
 
-    log.debug("End of processing.")
+    shared.log.debug("End of processing.")
