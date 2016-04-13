@@ -5,8 +5,9 @@ import time, sys, socket, logging, threading, itertools
 from artnet import dmx_frame
 from artnet import dmx_deamon
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
-log = logging.getLogger(__name__)
+from artnet import shared
+#logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
+#log = logging.getLogger(__name__)
 
 class Controller(dmx_deamon.Poller):
     def __init__(self, address, nodaemon=False, runout=False, fps=10.0, bpm=60.0, measure=4,  timeout=0,  universe=0):

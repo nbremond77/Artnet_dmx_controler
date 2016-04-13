@@ -2,8 +2,9 @@
 import time,  logging
 from artnet import dmx_frame, dmx_fixture, dmx_effects, dmx_rig
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
-log = logging.getLogger(__name__)
+from artnet import shared
+#logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
+#log = logging.getLogger(__name__)
 
 class Cue(object):
     def __init__(self, cueName, fixtureList={},  groupList={},  effectList = {}, initialTransitionDuration = 0):
@@ -53,17 +54,9 @@ class Cue(object):
         for fixture, parameter in self.cueFixtureList.items():
             log.debug("Cue: %s Fixture: %s" % (self.name, fixture))
             for actionCommand, actionValue in parameter.items():
-                log.debug(" - action: %s - %s" % (actionCommand, actionValue))
-                if (actionCommand == "setIntensity"):
-                    if hasattr(fixture, 'setIntensity'):
-                        fixture.setIntensity(actionValue)
-                if (actionCommand == "setColor"):
-                    if hasattr(fixture, 'setColor'):
-                        fixture.setColor(actionValue)
-                if (actionCommand == "setStrobe"):
-                    if hasattr(fixture, 'setStrobe'):
-                        fixture.setStrobe(actionValue)
-            
+                #log.debug(" - action: %s - %s" % (actionCommand, actionValue))
+                fixture.setCommand(actionCommand, actionValue)
+                
             # Merge this values in the current frame
             theFrame.merge(fixture.getFrame())
             
@@ -71,28 +64,13 @@ class Cue(object):
         for group, parameter in self.cueGroupList.items():
             log.debug("Cue: %s Group: %s" % (self.name, group))
             for actionCommand, actionValue in parameter.items():
-                log.debug(" - action: %s - %s" % (actionCommand, actionValue))
-                groupName.actionCommand(actionValue)
-                if (actionCommand == "setIntensity"):
-                    if hasattr(group, 'setIntensity'):
-                        group.setIntensity(actionValue)
-                if (actionCommand == "setColor"):
-                    if hasattr(group, 'setColor'):
-                        group.setColor(actionValue)
-                if (actionCommand == "setStrobe"):
-                    if hasattr(group, 'setStrobe'):
-                        group.setStrobe(actionValue)
+                group.setCommand(actionCommand, actionValue)
+                
             # Merge this values in the current frame
             theFrame.merge(group.getFrame())
 
         # Set the values of the effect
-
+# TO BE DONE
                 
         return theFrame
-#      t = time.time()
-#    while(True):
-#        g.setColor('#0000ff')
-#        g.setIntensity(255)
-#        yield g.getFrame()
-#        if(secs and time.time() - t >= secs):
-#            return
+

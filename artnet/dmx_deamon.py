@@ -14,8 +14,9 @@ import json
 from artnet import dmx_packet
 from artnet import dmx_definitions
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
-log = logging.getLogger(__name__)
+from artnet import shared
+#logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
+#log = logging.getLogger(__name__)
 
 #def main(config):
 #    log.info("Running script %s" % __name__)

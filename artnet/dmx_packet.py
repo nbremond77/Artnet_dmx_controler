@@ -14,8 +14,9 @@ import bitstring
 from artnet import dmx_definitions
 from artnet import dmx_frame
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
-log = logging.getLogger(__name__)
+from artnet import shared
+#logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
+#log = logging.getLogger(__name__)
 
 class ArtNetPacket(object):
     opcode = None
