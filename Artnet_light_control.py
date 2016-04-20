@@ -27,7 +27,7 @@ from artnet import shared
 #log = logging.getLogger(__name__)
 
 
-os.system('export APP_SETTINGS="config.DevelopmentConfig"')
+os.system('export APP_SETTINGS="config.ProductionConfig"')
 # Create the application
 app = Flask(__name__)
 
@@ -49,9 +49,40 @@ from artnet import dmx_controller
 from artnet import dmx_effects
 
 #import dmx_NBRLib
+from colour import Color
+#import colorsys
 
+DEG30 = 30/360
 
+def adjacent_color(c, d=DEG30): # Assumption: c : color as defined in the colour library
+    #r, g, b = map(lambda x: x/255., [r, g, b]) # Convert to [0, 1]
+    #h, l, s = colorsys.rgb_to_hls(r, g, b)     # RGB -> HLS
+    (h,  s,  l) = C.hsl
+    h = [(h+d) % 1 for d in (-d, d)]           # Rotation by d
+    #adjacent = [map(lambda x: int(round(x*255)), colorsys.hls_to_rgb(hi, l, s))
+    #        for hi in h] # H'LS -> new RGB
+    newColor = Color(hue=h, saturation=s, luminance=l)
+    return newColor
+    
 
+colorList = {}
+colorList['Orange']="orange"
+colorList['Jaune-Orange']="gold"
+colorList['Jaune']="yellow"
+colorList['Vert-Clair']="yellowgreen"
+colorList['Vert']="green"
+colorList['Turquoise']="turquoise"
+colorList['Bleu-Ciel']="lightskyblue"
+colorList['Bleu']="blue"
+colorList['Bleu-Fonce']="darkblue"
+colorList['Outremer']="mediumblue"
+colorList['Blue-Violet']="blueviolet"
+colorList['Violet']="purple"
+colorList['Magenta']="magenta"
+colorList['Rouge']="red"
+colorList['Rouge-Orange']="orangered"
+
+mainColor = Color('black')
 
 frameList=[]
 aFrame = dict(name='Douche_simple',  image='static/douche1.jpg',  page=1)
@@ -81,7 +112,7 @@ hostIP = "192.168.0.82" # Target for the ArtNet frames, or empty for broadcast
 # Create and load the current rig pararmeters
 #    myRig =  rig_setup.get_default_rig()
 myRig = dmx_rig.Rig()
-myRig.load("/home/nbremond/myCloud/Projets_NBR/Electronique/ArtNet DMX Controller/Artnet_dmx_controler/rigs/my-rig_2.yaml")
+myRig.load("rigs/my-rig_2.yaml")
 myRig.printRig()
 
 
@@ -98,20 +129,17 @@ shared.log.debug("Configure DMX controller")
 q = dmx_controller.Controller(address, bpm=30, fps=20,  timeout=TIMEOUT,  nodaemon=True, runout=False,  universe=1)
     
     
-    
-    
-
-
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     #shared.log.debug(frameList)
-    return render_template('layout_1.html',  buttonList=frameList,  imageList=imageList,  page=currentPage)
+    print('main_layout')
+    return render_template('main_layout.html',  buttonList=frameList,  imageList=imageList,  page=currentPage)
 
 
 @app.route('/sceneButton', methods = ['POST'])
 def sceneButton():
+    print('scene button')
     shared.log.debug("POST - Frame1")
     frameName = request.form['Frame']
     shared.log.debug(frameName)
@@ -142,44 +170,131 @@ def sceneButton():
     #shared.log.debug(currentFrame)
     return redirect('/')
 
-@app.route('/nextPage', methods = ['GET'])
-def nextPage():
+@app.route('/next', methods = ['GET'])
+def next():
     global currentPage
+    print('next')
     currentPage = min(currentPage+1,  MAX_PAGES)
     shared.log.debug("GET - next - %s" %  currentPage)
 
-    q.removeAll()
-    q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*10, totalDuration=30.0)) # Color
+#    q.removeAll()
+#    q.add(dmx_effects.create_multiframe([all_red(g2),  all_blue(g2)]*10, totalDuration=30.0)) # Color
     return redirect('/')
 
-@app.route('/previousPage', methods = ['GET'])
-def previousPage():
+@app.route('/previous', methods = ['GET'])
+def previous():
+    print('previous')
     global currentPage
     currentPage = max(currentPage-1,  1)
     shared.log.debug("GET - previous - %s" %  currentPage)
 
-    q.removeAll()
-    q.add(dmx_effects.create_multifade([all_red(g1),  all_blue(g1)]*10, totalDuration=30.0)) # Color
+#    q.removeAll()
+#    q.add(dmx_effects.create_multifade([all_red(g1),  all_blue(g1)]*10, totalDuration=30.0)) # Color
     return redirect('/')    
 
-@app.route('/setupPage')
-def setupPage():
-    shared.log.debug("add effect 1")
-#    q.add(dmx_effects.create_multifade([
-#        all_red(g1),
-#        all_blue(g1),
-#    ] * 2, totalDuration=5.0)) 
+@app.route('/Vert', methods = ['GET'])
+def vert():
+    print('vert')
+    global mainColor
+    mainColor = Color(colorList['Vert'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')    
+
+@app.route('/Turquoise', methods = ['GET'])
+def turquoise():
+    print('turquoise')
+    global mainColor
+    mainColor = Color(colorList['Turquoise'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')    
+
+@app.route('/Magenta', methods = ['GET'])
+def magenta():
+    print('magenta')
+    global mainColor
+    mainColor = Color(colorList['Magenta'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')    
+
+@app.route('/Violet', methods = ['GET'])
+def violet():
+    print('violet')
+    global mainColor
+    mainColor = Color(colorList['Violet'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')    
+
+@app.route('/BleuFonce', methods = ['GET'])
+def bleuFonce():
+    print('bleuFonce')
+    global mainColor
+    mainColor = Color(colorList['Bleu-Fonce'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')    
+
+@app.route('/BleuCiel', methods = ['GET'])
+def bleuCiel():
+    print('bleuCiel')
+    global mainColor
+    mainColor = Color(colorList['Bleu-Ciel'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')  
+
+@app.route('/Outremer', methods = ['GET'])
+def outremer():
+    print('outremer')
+    global mainColor
+    mainColor = Color(colorList['Outremer'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')  
+
+
+@app.route('/Rouge', methods = ['GET'])
+def rouge():
+    print('rouge')
+    global mainColor
+    mainColor = Color(colorList['Rouge'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')  
+
+@app.route('/Orange', methods = ['GET'])
+def orange():
+    print('orange')
+    global mainColor
+    mainColor = Color(colorList['Orange'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')  
+
+@app.route('/Jaune', methods = ['GET'])
+def jaune():
+    print('jaune')
+    global mainColor
+    mainColor = Color(colorList['Jaune'])
+    shared.log.debug("Color: %s" %  mainColor)
+    return redirect('/')  
+    
+@app.route('/Toilette')
+def toilette():
+    print('Toilette')
+    shared.log.debug("Toilette")
     q.removeAll()
     q.add(iter([[255] * 512]))   
-    return 'The configuration page'
+    return redirect('/')  
 
     
-@app.route('/aboutPage')
-def aboutPage():
+@app.route('/Douche')
+def douche():
+    print('Douche')
     q.removeAll()
     q.add(iter([[0] * 512]))
-    return 'The about page'
+    return redirect('/')  
 
+@app.route('/Bain')
+def bain():
+    print('Bain')
+    q.removeAll()
+    q.add(iter([[0] * 512]))
+    return redirect('/')  
 
 
 def all_red(g):
