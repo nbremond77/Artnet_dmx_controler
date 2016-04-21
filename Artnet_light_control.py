@@ -64,7 +64,7 @@ def adjacent_color(c, d=DEG30): # Assumption: c : color as defined in the colour
     newColor = Color(hue=h, saturation=s, luminance=l)
     return newColor
     
-
+"""
 colorList = {}
 colorList['Orange']="orange"
 colorList['Jaune-Orange']="gold"
@@ -81,50 +81,68 @@ colorList['Violet']="purple"
 colorList['Magenta']="magenta"
 colorList['Rouge']="red"
 colorList['Rouge-Orange']="orangered"
+"""
 
 mainColor = Color('black')
 
-frameList=[]
-aFrame = dict(name='Douche_simple',  image='static/douche1.jpg',  page=1)
-frameList.append(aFrame)
-aFrame = dict(name='Douche_froide',  image='static/douche2.jpg',  page=1)
-frameList.append(aFrame)
-aFrame = dict(name='Douche_chaude',  image='static/douche3.jpg',  page=1)
-frameList.append(aFrame)
+choiceList=[]
+aFrame = dict(name='Vert',  image='',  color='green', description="Anti-allergiques et antibiotiques", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Turquoise',  image='',  color='turquoise', description="Mobilise les cycles chronobiologiques", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Magenta',  image='',  color='magenta', description="Représente la fusion, l'amour, le rêve mais également la vulnérabilité", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Violet',  image='',  color='purple', description="Est un immunostimulant, pour la circulation veineuse et contre les migraines", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Bleu Foncé',  image='',  color='darkblue', description="On le préconise comme somnifère et antibactérien, détuméfiant. Il participe de la synchronisation entre les deux hémisphères cérébraux", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='BleuCiel',  image='',  color='lightskyblue', description="Symbolise le souffle, la communication, l'échange, le partage. Il est anti-inflammatoire et rafraîchissant", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Outremer',  image='mediumblue',  color='green', description="Inhibiteur et antistress. Il porte la tempérance, le calme et l'introspection", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Rouge',  image='',  color='red', description="Il permet de tonifier et dynamiser par ses vertus anti-anémiques", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Orange',  image='',  color='orange', description="On l'utilise en anti-dépresseur ou stimulant neurosensoriel", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Jaune',  image='',  color='yellow', description="On s'en sert comme stimulant digestif et lymphatique, pour l'estomac et les glandes exocrines", page=1)
+choiceList.append(aFrame)
 
-aFrame = dict(name='Bain_simple',  image='static/douche1.jpg',  page=2)
-frameList.append(aFrame)
-aFrame = dict(name='Bain_froid',  image='static/douche2.jpg',  page=2)
-frameList.append(aFrame)
-aFrame = dict(name='Bain_chaude',  image='static/douche3.jpg',  page=2)
-frameList.append(aFrame)
+programList=[]
+aFrame = dict(name='Tonic 5mn',  image='',  color='', description="Programme tonic rapide", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Tonic 10mn',  image='',  color='', description="Programme tonic", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Paisible 5mn',  image='',  color='', description="Programme relaxant rapide", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Paisible 10mn',  image='',  color='', description="Programme relaxant de 10mn", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Paisible 20mn',  image='',  color='', description="Programme relaxant de 20 mn", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Paisible 30mn',  image='',  color='', description="Programme relaxant de 30 mn", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Fin',  image='',  color='', description="Fin de programme", page=1)
+choiceList.append(aFrame)
+aFrame = dict(name='Nuit',  image='',  color='', description="Eclairage tamisé", page=1)
+choiceList.append(aFrame)
 
-MAX_PAGES = 4
+
+MAX_PAGES = 1
 imageList = ['static/douche1.jpg',  'static/douche2.jpg',  'static/douche3.jpg',  'static/douche4.jpg']
 currentPage = 1
 
 
 
-#Tsample = 2 # sampling time in seconds
 TIMEOUT = 5*60 # Time in second before blackout when no action is done
 hostIP = "192.168.0.82" # Target for the ArtNet frames, or empty for broadcast
+address = "192.168.0.82"
 
 # Create and load the current rig pararmeters
-#    myRig =  rig_setup.get_default_rig()
 myRig = dmx_rig.Rig()
 myRig.load("rigs/my-rig_2.yaml")
 myRig.printRig()
 
 
-shared.log.info("Running script %s" % __name__)
-# global g
-# g = get_default_fixture_group(config)
-#    q = controller or dmx_controller.Controller(config.get('base', 'address'), bpm=60, nodaemon=True, runout=True)
-address = "192.168.0.82"
-#    address = ""
-
 shared.log.debug("Configure DMX controller")
-
 #    q = dmx_controller.Controller(address, bpm=30, fps=20,  nodaemon=True, runout=False,  universe=1)
 q = dmx_controller.Controller(address, bpm=30, fps=20,  timeout=TIMEOUT,  nodaemon=True, runout=False,  universe=1)
     
@@ -132,9 +150,9 @@ q = dmx_controller.Controller(address, bpm=30, fps=20,  timeout=TIMEOUT,  nodaem
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #shared.log.debug(frameList)
+    #shared.log.debug(choiceList)
     print('main_layout')
-    return render_template('main_layout.html',  buttonList=frameList,  imageList=imageList,  page=currentPage)
+    return render_template('main_layout.html',  titre="Salle de bain", buttonList=choiceList,  imageList=imageList,  page=currentPage, programList=programList)
 
 
 @app.route('/sceneButton', methods = ['POST'])
@@ -143,7 +161,7 @@ def sceneButton():
     shared.log.debug("POST - Frame1")
     frameName = request.form['Frame']
     shared.log.debug(frameName)
-    for i in frameList:
+    for i in choiceList:
         #print(i)
         #print(i['name'])
         if (i['name'] == frameName):
@@ -154,7 +172,7 @@ def sceneButton():
             
             shared.log.debug("add effect 2")
             q.removeAll()
-            q.add(dmx_effects.create_frameListRun(q.get_clock(), frames=[
+            q.add(dmx_effects.create_choiceListRun(q.get_clock(), frames=[
                 all_gray(g3),  
                 all_white(g3), 
                 all_red(g1),
