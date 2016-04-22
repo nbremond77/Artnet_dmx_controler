@@ -1,0 +1,86 @@
+# Example ~/.artnet-rig.yaml file
+{
+    "name": "My personnal Rig",
+    
+    "fixtures": {
+        "rgbw1": {
+            "address": 1,
+            "config": "generic/generic_RGBW.yaml"
+        },
+        "rgbw2": {
+            "address": 5,
+            "config": "generic/generic_RGBW.yaml"
+        },
+        "rgbw3": {
+            "address": 9,
+            "config": "generic/generic_RGBW.yaml"
+        },
+        "dimmer4": {
+            "address": 13,
+            "config": "generic/generic_dimmer.yaml"
+        },
+        "rgbw5": {
+            "address": 14,
+            "config": "generic/generic_RGB.yaml"
+        },
+    },
+    
+    "groups": {
+        "all": ["rgbw1", "rgbw2", "rgbw3", "dimmer4", "rgbw5"],
+        "odds": ["rgbw1", "rgbw3"],
+        "evens": ["rgbw2", "rgbw5"],
+        "dimmers": ["dimmer4"]
+    },
+   
+    "cues": {
+        "cueName1": {
+            "fixtureList": {
+                  "rgbw1": {"setColor":"#22F35515", "FX":{"blinkFixture":{"timeON":25, "timeOFF":10} } },
+                  "rgbw2": {"setColor":"#EEBBAA", "setIntensity":103,"FX":{} },
+                  "rgbw5": {"setColor":"#12345678", "FX":{} }
+            },
+            "groupList": {
+                  "odds": {"setColor":"#EEBBAA", "FX":{} }
+            },
+            "effectList": {},
+            "initialTransitionDuration": 5
+        },
+        "cueName2": {
+            "fixtureList": {},
+            "groupList": {
+                  "odds": {"setColor":"#22F35515", "setIntensity":44,"FX":{} },
+                  "evens": {"setColor":"#EEBBAA", "FX":{"blinkGroup":{"timeON":0.5, "timeOFF":1} } }
+            },
+            "effectList": {},
+            "initialTransitionDuration": 8
+        },
+        "cueName3": {
+            "fixtureList": {
+                  "rgbw3": {"setColor":"#22F35515", "setIntensity":133,"FX":{} },
+                  "dimmer4": {"setIntensity":231, "FX":{} }
+            },
+            "groupList": {},
+            "effectList": {},
+            "initialTransitionDuration": 3
+        }
+    },
+
+    "chases": {
+        "chaseName1": [
+            #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop, "initialTransitionDuration": time_in_seconds},
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 1},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop", "initialTransitionDuration": 0}
+        ],
+        "chaseName2": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ]
+    },
+    
+    "shows" : {
+        "showName1": ["chaseName1", "chaseName2"],
+        "showName2": ["chaseName3", "chaseName2", chaseName3"]
+    } 
+}
