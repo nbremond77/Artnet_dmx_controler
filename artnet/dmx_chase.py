@@ -1,9 +1,16 @@
-#"chaseName1": [
-#    { "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop},
-#    { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue"},
-#    { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue"},
-#    { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop"}
-#],
+#    "chases": {
+#        "chaseName1": [
+#            #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop, "initialTransitionDuration": time_in_seconds},
+#            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
+#            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 1},
+#            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop", "initialTransitionDuration": 0}
+#        ],
+#        "chaseName2": [
+#            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+#            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+#            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+#        ]
+#    },
 
 import time,  logging
 from artnet import dmx_frame, dmx_fixture, dmx_effects, dmx_rig,  dmx_cue
@@ -47,10 +54,3 @@ class Chase():
 
         return theFrame
 
-#      t = time.time()
-#    while(True):
-#        g.setColor('#0000ff')
-#        g.setIntensity(255)
-#        yield g.getFrame()
-#        if(secs and time.time() - t >= secs):
-#            return

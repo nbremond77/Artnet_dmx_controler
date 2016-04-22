@@ -1,4 +1,37 @@
-
+#    "cues": {
+#        "cueName1": {
+#            "fixtureList": {
+#                  "rgbw1": {"setColor":"#22F35515", "FX":{"blinkFixture":{"timeON":25, "timeOFF":10} } },
+#                  "rgbw2": {"setColor":"#EEBBAA", "setIntensity":103,"FX":{} },
+#                  "rgbw5": {"setColor":"#12345678", "FX":{} }
+#            },
+#            "groupList": {
+#                  "odds": {"setColor":"#EEBBAA", "FX":{} }
+#            },
+#            "effectList": {},
+#            "initialTransitionDuration": 5
+#        },
+#        "cueName2": {
+#            "fixtureList": {},
+#            "groupList": {
+#                  "odds": {"setColor":"#22F35515", "setIntensity":44,"FX":{} },
+#                  "evens": {"setColor":"#EEBBAA", "FX":{"blinkGroup":{"timeON":0.5, "timeOFF":1} } }
+#            },
+#            "effectList": {},
+#            "initialTransitionDuration": 8
+#        },
+#        "cueName3": {
+#            "fixtureList": {
+#                  "rgbw3": {"setColor":"#22F35515", "setIntensity":133,"FX":{} },
+#                  "dimmer4": {"setIntensity":231, "FX":{} }
+#            },
+#            "groupList": {},
+#            "effectList": {},
+#            "initialTransitionDuration": 3
+#        }
+#    },
+    
+    
 import time,  logging
 from artnet import dmx_frame, dmx_fixture, dmx_effects, dmx_rig
 

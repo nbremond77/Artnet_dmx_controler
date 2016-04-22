@@ -1,5 +1,38 @@
 # From gitHub : philchristensen/python-artnet
 # https://github.com/philchristensen/python-artnet
+
+
+#    "fixtures": {
+#        "rgbw1": {
+#            "address": 1,
+#            "config": "generic/generic_RGBW.yaml"
+#        },
+#        "rgbw2": {
+#            "address": 5,
+#            "config": "generic/generic_RGBW.yaml"
+#        },
+#        "rgbw3": {
+#            "address": 9,
+#            "config": "generic/generic_RGBW.yaml"
+#        },
+#        "dimmer4": {
+#            "address": 13,
+#            "config": "generic/generic_dimmer.yaml"
+#        },
+#        "rgbw5": {
+#            "address": 14,
+#            "config": "generic/generic_RGB.yaml"
+#        },
+#    },
+#    
+#    "groups": {
+#        "all": ["rgbw1", "rgbw2", "rgbw3", "dimmer4", "rgbw5"],
+#        "odds": ["rgbw1", "rgbw3"],
+#        "evens": ["rgbw2", "rgbw5"],
+#        "dimmers": ["dimmer4"]
+#    },
+    
+    
 import yaml
 import logging
 import pkg_resources as pkg
