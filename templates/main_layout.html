@@ -180,7 +180,7 @@ input[type=submit]{
 <h1>{{ pageTitle[page-1]|safe }}</h1>
 
 <div class="program">
-    <form align="left" action="/program" method=post class=select-program name=selectProgram>
+    <form align="left" action="{{ url_for('program') }}" method=post class=select-program name=selectProgram>
         {% for aButton in programList %}
             {% if page == aButton['page'] %}
                 <h2><input type=submit value="{{ aButton['name'] }}" name=Program class=programChoice></h2>
@@ -194,7 +194,7 @@ input[type=submit]{
 
 <div class="col-3 col-s-12">
 <div class="aside">
-    <form align="left" action="/scene" method=post class=select-scene name=selectScene>
+    <form align="left" action="{{ url_for('scene') }}" method=post class=select-scene name=selectScene>
         {% for aButton in buttonList %}
             {% if page == aButton['page'] %}
                 <h2><input type=submit value="{{ aButton['name'] }}" name=Scene class=choice></h2>
