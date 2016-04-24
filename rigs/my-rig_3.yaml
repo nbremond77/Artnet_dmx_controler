@@ -66,21 +66,56 @@
     },
 
     "chases": {
-        "chaseName1": [
+        "Tonic 5mn": [
             #{ "cueList": {cue1, cue2, cue3}, "duration": time_in_seconds, "nextAction":Continue|Stop|Loop, "initialTransitionDuration": time_in_seconds},
             { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 2},
             { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 1},
-            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop", "initialTransitionDuration": 0}
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Loop", "loopCount": 3, "initialTransitionDuration": 0}
         ],
-        "chaseName2": [
+        "Tonic 10mn": [
             { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
             { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
             { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
-        ]
+        ],
+        "Tonic 20mn": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ],
+        "Paisible 5mn": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ],
+        "Paisible 10mn": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ],
+        "Paisible 20mn": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ],
+        "Paisible 30mn": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ],
+        "Fin": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ],
+        "Nuit": [
+            { "cueList": {"cueName2", "cueName3"}, "duration": 10.5, "nextAction":"Continue", "initialTransitionDuration": 0},
+            { "cueList": {"cueName1"}, "duration": 5, "nextAction":"Continue", "initialTransitionDuration": 2},
+            { "cueList": {"cueName3"}, "duration": 30, "nextAction":"Stop", "initialTransitionDuration": 5}
+        ],
     },
     
     "shows" : {
-        "showName1": ["chaseName1", "chaseName2"],
-        "showName2": ["chaseName3", "chaseName2", chaseName3"]
+        "showName1": ["Tonic 5mn", "Nuit"],
+        "showName2": ["Tonic 10mn", "Nuit", "Paisible 30mn", "Fin"]
     } 
 }
