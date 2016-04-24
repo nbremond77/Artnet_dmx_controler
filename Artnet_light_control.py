@@ -25,6 +25,15 @@ import logging
 from colour import Color
 
 from artnet import shared
+from artnet import dmx_rig
+from artnet import dmx_fixture
+from artnet import dmx_frame
+from artnet import dmx_chase
+from artnet import dmx_show
+from artnet import dmx_cue
+from artnet import dmx_controller
+from artnet import dmx_effects
+
 #logging.basicConfig(format='%(levelname)s:%(message)s', filename='artNet_controller.log', level=logging.DEBUG)
 #log = logging.getLogger(__name__)
 
@@ -41,14 +50,7 @@ app.config.from_object(config.ProductionConfig)
 
 
 
-from artnet import dmx_rig
-from artnet import dmx_fixture
-from artnet import dmx_frame
-from artnet import dmx_chase
-from artnet import dmx_show
-from artnet import dmx_cue
-from artnet import dmx_controller
-from artnet import dmx_effects
+
 
 #import dmx_NBRLib
 #import colorsys
@@ -144,7 +146,9 @@ choiceList.append(aFrame)
 programList=[]
 aFrame = dict(name='Tonic 5mn',  image='',  color='', description="Programme tonic rapide (5mn)", page=1)
 programList.append(aFrame)
-aFrame = dict(name='Tonic 10mn',  image='',  color='', description="Programme tonic", page=1)
+aFrame = dict(name='Tonic 10mn',  image='',  color='', description="Programme tonic de 10mn", page=1)
+programList.append(aFrame)
+aFrame = dict(name='Tonic 20mn',  image='',  color='', description="Programme tonic de 20mn", page=1)
 programList.append(aFrame)
 aFrame = dict(name='Paisible 5mn',  image='',  color='', description="Programme relaxant rapide (5mn)", page=1)
 programList.append(aFrame)
@@ -194,6 +198,9 @@ def index():
 @app.route('/scene', methods = ['POST'])
 def scene():
     global colorList
+    global mainColor,  sideColor1,  sideColor2,  triadColor1,  triadColor2,  complementColor,  sideComplementColor1,  sideComplementColor2
+    global currentProgramName
+    
     print('scene')
     shared.log.debug("POST - scene")
     sceneName = request.form['Scene']
@@ -222,10 +229,10 @@ def scene():
             # Udpate the colors in the Cues
             
             # Start the light program
-            if (currentProgramName <> ""):
+            if (currentProgramName != ""):
                 if currentProgramName in chaseList:
                     q.removeAll()
-                    q.add(dmx_effects.create_chaseRun(q.get_clock(), chaseList[currentProgramName]))
+                    q.add(dmx_effects.create_chaseRun(q.get_clock(), myRig,  chaseList[currentProgramName]))
                     shared.log.debug('Start light program [%s] with color %s' % (currentProgramName, mainColor))
                     print('Start light program [%s] with color %s' % (currentProgramName, mainColor))
             break
@@ -237,6 +244,12 @@ def scene():
 
 @app.route('/program', methods = ['POST'])
 def program():
+    global myRig
+    global colorList
+    global mainColor,  sideColor1,  sideColor2,  triadColor1,  triadColor2,  complementColor,  sideComplementColor1,  sideComplementColor2
+    global currentProgramName
+    global q
+    
     print('program')
     shared.log.debug("POST - program")
     programName = request.form['Program']
@@ -249,13 +262,21 @@ def program():
             print('-->FOUND: %s - %s' % (programName,  currentProgram))
             
             # Start the light program
-            if (currentProgramName <> ""):
-                if currentProgramName in chaseList:
+            if (currentProgramName != ""):
+                print("Check if currentProgramName [%s] is in rig.chases" % currentProgramName)
+                print("---%s" % myRig.chases[currentProgramName])
+#                print("%s" % myRig.chases)
+                if (currentProgramName in myRig.chases):
+                    print("OK; continue")
                     q.removeAll()
-                    q.add(dmx_effects.create_chaseRun(q.get_clock(), chaseList[currentProgramName]))
+                    print("OK; removed")
+                    print("theChase.chase: %s" % myRig.chases[currentProgramName].chase)
+                    q.add(dmx_effects.create_chaseRun(q.get_clock(), myRig, myRig.chases[currentProgramName]))
+                    print("OK; added")
                     shared.log.debug('Start light program [%s] with color %s' % (currentProgramName, mainColor))
                     print('Start light program [%s] with color %s' % (currentProgramName, mainColor))
-            break
+ 
+                break
     return redirect('/')
     
 @app.route('/next', methods = ['GET'])
@@ -314,6 +335,8 @@ def OFF():
 if __name__ == '__main__':
 
     # Display HTML pages to control lights using ArtNet messages
+
+    q.add(dmx_effects.create_chaseRun(q.get_clock(), myRig,  myRig.chases["Tonic 5mn"]))
 
     shared.log.info("Start DMX controller with other effect")
     q.start()
