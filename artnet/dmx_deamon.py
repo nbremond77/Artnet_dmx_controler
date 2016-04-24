@@ -71,7 +71,7 @@ class Poller(threading.Thread):
     def send_dmx(self, frame, universe=0):
         p = dmx_packet.DmxPacket(frame, universe=universe)
         self.sock.sendto(p.encode(), (self.address, dmx_definitions.STANDARD_PORT))
-        shared.log.debug("Send DMX: %s" % p)
+        shared.log.debug("Send DMX: u:%s - %s - frame: %s" % (universe,  p, frame[0:30]))
     
     def send_poll(self):
         p = dmx_packet.PollPacket(address=self.broadcast_address)

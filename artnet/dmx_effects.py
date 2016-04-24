@@ -19,49 +19,69 @@ from artnet import shared
 #        ],
         
         
-def create_chaseRun(clock, chase, fps=20):
+def create_chaseRun(clock, myRig,  theChase, fps=20):
     result = []
     c = clock()
     
-    startFrame = dmx.Frame()
+    print("create_chaseRun: %s" % theChase.chase)
+    
+    startFrame = dmx_frame.Frame()
+    endFrame = dmx_frame.Frame()
     cueIndex = 0
     loopExecutionCounter = 0
     indexStartLoop = 0
+    nextFrame = True
     
-    while cueIndex < len(chase):    
-        cue = chase[cueIndex]
-        frame_startTime = time.time()
-        frame_endTransitionTime = frame_startTime + cues['initialTransitionDuration']
-        frame_endTime = frame_startTime + cue['duration']
-        
-        endFrame = cue.getFrame()
+    while(c['running']):
+    #while cueIndex < len(theChase.chase):  
+        if nextFrame:
+            cues = theChase.chase[cueIndex]
+            frame_startTime = time.time()
+            frame_endTransitionTime = frame_startTime + cues['initialTransitionDuration']
+            frame_endTime = frame_startTime + cues['duration']
+            cueList = cues['cueList']
+            
+            for cue in cueList:
+                endFrame.merge(myRig.cues[cue].getFrame())
+            
+            nextFrame = False
 
-        while(c['running'] and (time.time() < frame_endTime)):
-            if(time.time() < frame_endTransitionTime) and (frameIndex > 0):
-                fade = generate_fade(startFrame, endFrame, cues['initialTransitionDuration'], fps)
-                result.extend(list(fade))
-            else:
-                result.extend(list(endFrame))
-            c = clock()
+        #while(c['running'] and (time.time() < frame_endTime)):
+        if(time.time() < frame_endTransitionTime) and (cueIndex > 0):
+            currentFrame = generate_fade(startFrame, endFrame, cues['initialTransitionDuration'], fps)
+            #result.extend(list(fade))
+        else:
+            currentFrame = endFrame
+            #result.extend(list(endFrame))
+            #c = clock()
+        if time.time() >= frame_endTime:
+            nextFrame = True
         
         startFrame = endFrame
 
-        if (cues['nextAction']=="Continue"):
-            cueIndex = cueIndex + 1
-        elif cues['nextAction']=="Stop":
-            cueIndex = len(chase) # End of cue list
-        elif cues['nextAction']=="StartLoop":
-            indexStartLoop = cueIndex
-            loopExecutionCounter = 0
-            cueIndex = cueIndex + 1
-        elif cues['nextAction']=="Loop":
-            if loopExecutionCounter < cues['loopCount']:
-                cueIndex = indexStartLoop
-                loopExecutionCounter = loopExecutionCounter + 1
-            else:
+        if nextFrame:
+            if (cues['nextAction']=="Continue"):
                 cueIndex = cueIndex + 1
-        
-    return iter(result)
+            elif cues['nextAction']=="Stop":
+                cueIndex = len(chase) # End of cue list
+            elif cues['nextAction']=="StartLoop":
+                indexStartLoop = cueIndex
+                loopExecutionCounter = 0
+                cueIndex = cueIndex + 1
+            elif cues['nextAction']=="Loop":
+                if loopExecutionCounter < cues['loopCount']:
+                    cueIndex = indexStartLoop
+                    loopExecutionCounter = loopExecutionCounter + 1
+                else:
+                    cueIndex = cueIndex + 1
+            
+        if cueIndex >= len(theChase.chase):
+            return
+            
+    c = clock()
+    
+    yield currentFrame
+
     
 def create_cueListRun(clock, cues, cuesDurations = [], fps=20):
     result = []

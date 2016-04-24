@@ -61,10 +61,10 @@ class Controller(dmx_deamon.Poller):
             self.access_lock.acquire()
             if(self.autocycle.enabled):
                 self.generators.append(itertools.cycle(generator))
-                shared.log.debug("Add cyclic generator: %s" % generator)
+                shared.log.debug("*** Add autocyclic generator: %s" % generator)
             else:
                 self.generators.append(generator)
-                shared.log.debug("Add cyclic generator: %s" % generator)
+                shared.log.debug("*** Add generator: %s" % generator)
         finally:
             self.access_lock.release()
     
@@ -89,8 +89,12 @@ class Controller(dmx_deamon.Poller):
             try:
                 n = g.__next__()
                 f = f.merge(n) if f else n
+                
             except StopIteration:
                 self.generators.remove(g)
+                shared.log.debug("***Controller remove generator: %s" % g)
+
+            shared.log.debug("Controller iterate generators with frame: %s" % f[0:30])
         
         self.frameindex = self.frameindex + 1 if self.frameindex < self.fps - 1 else 0
         self.beatindex = self.beatindex + 1 if self.beatindex < self.fpb - 1 else 0
@@ -116,7 +120,9 @@ class Controller(dmx_deamon.Poller):
                 
             self.iterate()
 #            self.handle_artnet()
-            
+
+            shared.log.debug("Controller run - send_dmx with frame: %s" % self.last_frame[0:30])
+
             self.send_dmx(self.last_frame,  universe=self.universe)
             
             if(self.runout and len(self.generators) == 0):
