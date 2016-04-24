@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 <style>
 * {
     box-sizing: border-box;
@@ -18,16 +19,20 @@ img {
     height: auto;
 }
 #buttonLeft {
-    float: left;
+    position: fixed; 
+    top: 10px;
+    left: 10px;
     width:70px;
     height: auto;
-    color:red;
+    z-index: 10000;
 }
 #buttonRight {
-    float: right;
+    position: fixed; 
+    top: 10px;
+    right: 10px;
     width:70px;
     height: auto;
-    color:green;
+    z-index: 10000;
 }
 .row:after {
     content: "";
@@ -122,8 +127,9 @@ input[type=submit]{
 </head>
 <body>
 
-<div class="col-1 col-s-1 buttonLeft" id="buttonLeft">left</div>
-<div class="col-1 col-s-1 buttonRight" id="buttonRight">right</div>
+<div class="col-1 col-s-1 buttonLeft" id="buttonLeft"><a href="#Previous"><img src="../static/arrow1_SmallL.png" border="0"></a></div>
+<div class="col-1 col-s-1 buttonRight" id="buttonRight"><a href="#Next"><img src="../static/arrow1_SmallR.png" border="0"></a></div>
+
 <div class="header">
 <h1>Artnet Light Controller - Salle de bain</h1>
 </div>
@@ -131,18 +137,10 @@ input[type=submit]{
 <div class="row">
 <div class="col-3 col-s-3 menu" id="buttonList">
 <ul>
-    <form align="left" action="/scene" method=post class=select-sceneLeft name=selectScLeft>
-            <li><input type=image alt='scene1' class='button' name=Scene1 src="../static/About.png"></li>
-            <li><input type=image alt='scene2' class='button' name=Scene2 src="../static/setup.png"></li>
-            <li><input type=image alt='scene3' class='button' name=Scene3 src="../static/wp_setup.jpg"></li>
-            <li><input type=submit id='buttonLavabo' name='Lavabo' value='lavabo'></li>
-<li><a href="#Douche" id="douche"><span>Douche</span></a></li>
-<li><a href="#Bain" id="bain"><span>Bain</span></a></li>
-<li><a href="#OFF" id="off"><span>Off</span></a></li>
-
-   </form>
-           
-
+    <a href="#Toilette" id="toilette"><li>Toilette</li></a>
+    <a href="#Douche" id="douche"><li>Douche</li></a>
+    <a href="#Bain" id="bain"><li>Bain</li></a>
+    <a href="#OFF" id="off"><li>Off</li></a>
 </ul>
 </div>
 
@@ -154,47 +152,47 @@ S'il existe une symbolique arbitraire construite par les différentes cultures e
 On distingue plusieurs catégories de couleurs selon leurs vertus.</p>
 <h2>Neutralisantes, nettoyantes et équilibrantes</h2>
 <p>
-<b>Vert :</b> a des vertus anti-allergiques et antibiotiques. Il représente l'indépendance, la nature, la liberté mais aussi la solitude et l'apprentissage.
-<b>Turquoise :</b> mobilise les cycles chronobiologiques. Il symbolise la transformation, l'évolution, l'élimination et la purification.</p>
+<b><a href="#Vert" id="vert">Vert</a> :</b> a des vertus anti-allergiques et antibiotiques. Il représente l'indépendance, la nature, la liberté mais aussi la solitude et l'apprentissage.
+<b><a href="#Turquoise" id="turquoise">Turquoise</a> :</b> mobilise les cycles chronobiologiques. Il symbolise la transformation, l'évolution, l'élimination et la purification.</p>
 <h2>Cicatrisantes, protectrices et régénératrices</h2>
 <p>
 <b>Écarlate :</b> porte la fertilité, la féminité et l'enracinement, la terre. Ses vertus sont régénératrices et régulatrices.
-<b>Magenta :</b> représente la fusion, l'amour, le rêve mais également la vulnérabilité. On l'utilise comme rajeunissant et équilibrant cardiovasculaire, ou aphrodisiaque.
-<b>Violet :</b> est un immunostimulant, pour la circulation veineuse et contre les migraines. Il image l'esprit, la connaissance et la spiritualité.</p>
+<b><a href="#Magenta" id="magenta">Magenta</a> :</b> représente la fusion, l'amour, le rêve mais également la vulnérabilité. On l'utilise comme rajeunissant et équilibrant cardiovasculaire, ou aphrodisiaque.
+<b><a href="#Violet" id="violet">Violet</a> :</b> est un immunostimulant, pour la circulation veineuse et contre les migraines. Il image l'esprit, la connaissance et la spiritualité.</p>
 <h2>Calmantes, dispersantes et sédatives</h2>
 <p>
-<b>Bleu foncé :</b> représente la nuit, l'inconscient, la méditation et la profondeur. On le préconise comme somnifère et antibactérien, détuméfiant. Il participe de la synchronisation entre les deux hémisphères cérébraux.
-<b>Bleu ciel :</b> symbolise le souffle, la communication, l'échange, le partage. Il est anti-inflammatoire et rafraîchissant.
-<b>Outremer :</b> est un inhibiteur et antistress. Il porte la tempérance, le calme et l'introspection.</p>
+<b><a href="#BleuFonce" id="bleuFonce">Bleu foncé</a> :</b> représente la nuit, l'inconscient, la méditation et la profondeur. On le préconise comme somnifère et antibactérien, détuméfiant. Il participe de la synchronisation entre les deux hémisphères cérébraux.
+<b><a href="#BleuCiel" id="bleuCiel">Bleu ciel</a> :</b> symbolise le souffle, la communication, l'échange, le partage. Il est anti-inflammatoire et rafraîchissant.
+<b><a href="#Outremer" id="outremer">Outremer</a> :</b> est un inhibiteur et antistress. Il porte la tempérance, le calme et l'introspection.</p>
 <h2>Énergisantes et tonifiantes</h2>
 <p>
-<b>Rouge :</b> symbolise la chaleur, la vitalité, l'engagement et le courage. Il permet de tonifier et dynamiser par ses vertus anti-anémiques.
-<b>Orange :</b> est un excitant qui stimule l'adrénaline. Il caractérise les mouvements, les rythmes et symbolise l'émotion, le contact. On l'utilise en anti-dépresseur ou stimulant neurosensoriel.
-<b>Jaune :</b> représente le soleil, la conscience, la lucidité, le rayonnement personnel. On s'en sert comme stimulant digestif et lymphatique, pour l'estomac et les glandes exocrines.</p>
+<b><a href="#Rouge" id="rouge">Rouge</a> :</b> symbolise la chaleur, la vitalité, l'engagement et le courage. Il permet de tonifier et dynamiser par ses vertus anti-anémiques.
+<b><a href="#Orange" id="orange">Orange</a> :</b> est un excitant qui stimule l'adrénaline. Il caractérise les mouvements, les rythmes et symbolise l'émotion, le contact. On l'utilise en anti-dépresseur ou stimulant neurosensoriel.
+<b><a href="#Jaune" id="jaune">Jaune</a> :</b> représente le soleil, la conscience, la lucidité, le rayonnement personnel. On s'en sert comme stimulant digestif et lymphatique, pour l'estomac et les glandes exocrines.</p>
 
 </div>
 
 <div class="col-3 col-s-12">
 <div class="aside">
-<h2>Vert </h2>
+<a href="#Vert" id="vert"><h2>Vert</h2></a>
 <p>Anti-allergiques et antibiotiques</p>
-<h2>Turquoise</h2>
-<p>mobilise les cycles chronobiologiques</p>
-<h2>Magenta</h2>
-<p>représente la fusion, l'amour, le rêve mais également la vulnérabilité
-<h2>Violet </h2>
-<p>est un immunostimulant, pour la circulation veineuse et contre les migraines</p>
-<h2>Bleu foncé</h2>
-<p>On le préconise comme somnifère et antibactérien, détuméfiant</p>
-<h2>Bleu foncé</h2>
+<a href="#Turquoise" id="turquoise"><h2>Turquoise</h2></a>
+<p>Mobilise les cycles chronobiologiques</p>
+<a href="#Magenta" id="magenta"><h2>Magenta</h2></a>
+<p>Représente la fusion, l'amour, le rêve mais également la vulnérabilité
+<a href="#Violet" id="violet"><h2>Violet</h2></a>
+<p>Est un immunostimulant, pour la circulation veineuse et contre les migraines</p>
+<a href="#BleuFonce" id="BleuFonce"><h2>Bleu foncé</h2></a>
 <p>On le préconise comme somnifère et antibactérien, détuméfiant. Il participe de la synchronisation entre les deux hémisphères cérébraux</p>
-<h2>Bleu ciel</h2>
+<a href="#BleuCiel" id="BleuCiel"><h2>Bleu ciel</h2></a>
 <p>Symbolise le souffle, la communication, l'échange, le partage. Il est anti-inflammatoire et rafraîchissant</p>
-<h2>Rouge </h2>
+<a href="#Outremer" id="outremer"><h2>Outremer</h2></a>
+<p>Inhibiteur et antistress. Il porte la tempérance, le calme et l'introspection.</p>
+<a href="#Rouge" id="rouge"><h2>Rouge</h2></a>
 <p>Il permet de tonifier et dynamiser par ses vertus anti-anémiques</p>
-<h2>Orange </h2>
+<a href="#Orange" id="orange"><h2>Orange</h2></a>
 <p>On l'utilise en anti-dépresseur ou stimulant neurosensoriel</p>
-<h2>Jaune</h2>
+<a href="#Jaune" id="jaune"><h2>Jaune</h2></a>
 <p>On s'en sert comme stimulant digestif et lymphatique, pour l'estomac et les glandes exocrines</p>
 </div>
 </div>
